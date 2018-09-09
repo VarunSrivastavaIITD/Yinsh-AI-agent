@@ -45,7 +45,7 @@ State Board::perform_ply(const State &state, Player player, Ply ply_toperform)
         {
             newstate.board_map[ply_toperform.first] = WHITE_RING;
             newstate.white_rings.push_back(ply_toperform.first);
-            if(newstate.white_rings.size() == Number_of_rings && newstate.black_rings.size() == Number_of_rings)
+            if (newstate.white_rings.size() == Number_of_rings && newstate.black_rings.size() == Number_of_rings)
             {
                 newstate.mode = S;
             }
@@ -54,7 +54,7 @@ State Board::perform_ply(const State &state, Player player, Ply ply_toperform)
         {
             newstate.board_map[ply_toperform.first] = BLACK_RING;
             newstate.black_rings.push_back(ply_toperform.first);
-            if(newstate.white_rings.size() == Number_of_rings && newstate.black_rings.size() == Number_of_rings)
+            if (newstate.white_rings.size() == Number_of_rings && newstate.black_rings.size() == Number_of_rings)
             {
                 newstate.mode = S;
             }
@@ -66,11 +66,11 @@ State Board::perform_ply(const State &state, Player player, Ply ply_toperform)
         {
             newstate.board_map[ply_toperform.first] = WHITE_MARKER;
             newstate.board_map[ply_toperform.second] = WHITE_RING;
-            for(int i=0; i<white_rings.size(); i++)
+            for (decltype(newstate.black_rings.size()) i = 0; i < newstate.white_rings.size(); i++)
             {
-                if(newstate.white_rings[i]==ply_toperform.first)
+                if (newstate.white_rings[i] == ply_toperform.first)
                 {
-                    newstate.white_rings[i]=ply_toperform.second;
+                    newstate.white_rings[i] = ply_toperform.second;
                 }
             }
             newstate.white_markers.push_back(ply_toperform.first);
@@ -79,17 +79,19 @@ State Board::perform_ply(const State &state, Player player, Ply ply_toperform)
         {
             newstate.board_map[ply_toperform.first] = BLACK_MARKER;
             newstate.board_map[ply_toperform.second] = BLACK_RING;
-            for(int i=0; i<black_rings.size(); i++)
+            for (decltype(newstate.black_rings.size()) i = 0; i < newstate.black_rings.size(); i++)
             {
-                if(newstate.black_rings[i]==ply_toperform.first)
+                if (newstate.black_rings[i] == ply_toperform.first)
                 {
-                    newstate.black_rings[i]=ply_toperform.second;
+                    newstate.black_rings[i] = ply_toperform.second;
                 }
             }
-            newstate.black_markers.push_back(ply_toperform.first);   
+            newstate.black_markers.push_back(ply_toperform.first);
         }
     }
+    return newstate;
 }
+
 vector<Ply> Board::generate_plies(const State &state, Player player)
 {
     vector<Ply> plies;

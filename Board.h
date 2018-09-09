@@ -20,6 +20,7 @@ private:
 
 public:
   vector<Ply> generate_plies(const State &, const Player);
+  State perform_ply(const State &, Player, Ply);
 };
 
 #endif
