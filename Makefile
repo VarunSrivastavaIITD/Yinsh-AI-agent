@@ -2,7 +2,7 @@ PROGNAME = main
 LIBS = 
 INCLUDES = -I/usr/local/include
 LDFLAGS = -L./
-OBJECTS = main.o State.o
+OBJECTS = main.o State.o Board.o
 CFLAGS = -Wall -Wextra -ggdb3 -std=c++11 -pedantic
 
 all: $(PROGNAME)
