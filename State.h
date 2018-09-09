@@ -16,16 +16,24 @@ enum Values
   BLACK_MARKER
 };
 
+enum Mode
+{
+  P,
+  S
+};
+
+typedef pair<pair<int, int>, pair<int, int>> Ply;
+
 class State
 {
-private:
+public:
+  Mode mode;
   map<pair<int, int>, Values> board_map;
   vector<pair<int, int>> white_rings;
   vector<pair<int, int>> black_rings;
   vector<pair<int, int>> white_markers;
   vector<pair<int, int>> black_markers;
 
-public:
   State();
   static pair<int, int> hex_to_ycoord(pair<size_t, size_t>);
   static pair<size_t, size_t> ycoord_to_hex(pair<int, int>);
