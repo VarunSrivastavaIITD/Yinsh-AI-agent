@@ -2,7 +2,7 @@
 #include "State.h"
 #include <vector>
 #include <utility>
-#include <numeric>
+#include <limits>
 
 using namespace std;
 
@@ -45,7 +45,7 @@ State perform_ply(const State &state, const Player &player, const Ply &ply_toper
         if (player == WHITE)
         {
             newstate.board_map[ply_toperform.first] = WHITE_RING;
-            newstate.white_rings.push_back(ply_toperform.first);
+            newstate.white_rings.insert(ply_toperform.first);
             if (newstate.white_rings.size() == Number_of_rings && newstate.black_rings.size() == Number_of_rings)
             {
                 newstate.mode = S;
@@ -54,7 +54,7 @@ State perform_ply(const State &state, const Player &player, const Ply &ply_toper
         else
         {
             newstate.board_map[ply_toperform.first] = BLACK_RING;
-            newstate.black_rings.push_back(ply_toperform.first);
+            newstate.black_rings.insert(ply_toperform.first);
             if (newstate.white_rings.size() == Number_of_rings && newstate.black_rings.size() == Number_of_rings)
             {
                 newstate.mode = S;
@@ -67,27 +67,25 @@ State perform_ply(const State &state, const Player &player, const Ply &ply_toper
         {
             newstate.board_map[ply_toperform.first] = WHITE_MARKER;
             newstate.board_map[ply_toperform.second] = WHITE_RING;
-            for (decltype(newstate.black_rings.size()) i = 0; i < newstate.white_rings.size(); i++)
+            auto search = newstate.white_rings.find(ply_toperform.first);
+            if (search != newstate.white_rings.end())
             {
-                if (newstate.white_rings[i] == ply_toperform.first)
-                {
-                    newstate.white_rings[i] = ply_toperform.second;
-                }
+                newstate.white_rings.erase(search);
+                newstate.white_rings.insert(ply_toperform.second);
             }
-            newstate.white_markers.push_back(ply_toperform.first);
+            newstate.white_markers.insert(ply_toperform.first);
         }
         else
         {
             newstate.board_map[ply_toperform.first] = BLACK_MARKER;
             newstate.board_map[ply_toperform.second] = BLACK_RING;
-            for (decltype(newstate.black_rings.size()) i = 0; i < newstate.black_rings.size(); i++)
+            auto search = newstate.black_rings.find(ply_toperform.first);
+            if (search != newstate.black_rings.end())
             {
-                if (newstate.black_rings[i] == ply_toperform.first)
-                {
-                    newstate.black_rings[i] = ply_toperform.second;
-                }
+                newstate.black_rings.erase(search);
+                newstate.black_rings.insert(ply_toperform.second);
             }
-            newstate.black_markers.push_back(ply_toperform.first);
+            newstate.black_markers.insert(ply_toperform.first);
         }
     }
     return newstate;

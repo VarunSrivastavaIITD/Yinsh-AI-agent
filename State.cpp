@@ -15,9 +15,4 @@ State::State()
             board_map[make_pair(x, y)] = EMPTY;
         }
     }
-
-    std::fill_n(std::back_inserter(black_markers), 30, make_pair(0, 0));
-    std::fill_n(std::back_inserter(white_markers), 30, make_pair(0, 0));
-    std::fill_n(std::back_inserter(white_rings), 5, make_pair(0, 0));
-    std::fill_n(std::back_inserter(black_rings), 5, make_pair(0, 0));
 }

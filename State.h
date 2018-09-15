@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <utility>
+#include <set>
 
 using namespace std;
 
@@ -29,10 +30,10 @@ class State
 public:
   Mode mode;
   map<pair<int, int>, Values> board_map;
-  vector<pair<int, int>> white_rings;
-  vector<pair<int, int>> black_rings;
-  vector<pair<int, int>> white_markers;
-  vector<pair<int, int>> black_markers;
+  set<pair<int, int>> black_rings;
+  set<pair<int, int>> white_rings;
+  set<pair<int, int>> white_markers;
+  set<pair<int, int>> black_markers;
 
   State();
   static pair<int, int> hex_to_ycoord(pair<size_t, size_t>);
