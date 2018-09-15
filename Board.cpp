@@ -2,6 +2,7 @@
 #include "State.h"
 #include <vector>
 #include <utility>
+#include <numeric>
 
 using namespace std;
 
@@ -36,7 +37,7 @@ bool add_ply(map<pair<int, int>, Values> &bmap, const pair<int, int> p, vector<P
     return false;
 }
 
-State Board::perform_ply(const State &state, Player player, Ply ply_toperform)
+State perform_ply(const State &state, const Player &player, const Ply &ply_toperform)
 {
     State newstate = state;
     if (ply_toperform.second.first == Placing && ply_toperform.second.second == Placing)
@@ -92,7 +93,7 @@ State Board::perform_ply(const State &state, Player player, Ply ply_toperform)
     return newstate;
 }
 
-vector<Ply> Board::generate_plies(const State &state, Player player)
+vector<Ply> generate_plies(const State &state, Player player)
 {
     vector<Ply> plies;
     if (state.mode == P)
@@ -149,4 +150,55 @@ vector<Ply> Board::generate_plies(const State &state, Player player)
         }
     }
     return plies;
+}
+
+Ply Board::bestply()
+{
+}
+
+double evaluation(const State &state)
+{
+    return 0;
+}
+
+double alphabeta(const State &state, double alpha, double beta, int depth, Player player)
+{
+    if (depth == 0)
+    {
+        return evaluation(state);
+    }
+
+    auto plies = generate_plies(state, player);
+    auto return_value = 0.0;
+
+    if (player == WHITE)
+    {
+        auto returned_alpha = numeric_limits<double>::min();
+        for (const auto &ply : plies)
+        {
+
+            const auto nextstate = perform_ply(state, player, ply);
+            returned_alpha = max(returned_alpha, alphabeta(nextstate, alpha, beta, depth - 1, BLACK));
+            if (returned_alpha >= beta)
+                return returned_alpha;
+            alpha = max(alpha, returned_alpha);
+        }
+        return_value = returned_alpha;
+    }
+
+    else
+    {
+        auto returned_beta = numeric_limits<double>::max();
+        for (const auto &ply : plies)
+        {
+            const auto nextstate = perform_ply(state, player, ply);
+            returned_beta = min(returned_beta, alphabeta(nextstate, alpha, beta, depth - 1, WHITE));
+            if (alpha >= returned_beta)
+                return returned_beta;
+            beta = min(beta, returned_beta);
+        }
+        return_value = returned_beta;
+    }
+
+    return return_value;
 }

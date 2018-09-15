@@ -19,8 +19,7 @@ private:
   Player player;
 
 public:
-  vector<Ply> generate_plies(const State &, const Player);
-  State perform_ply(const State &, Player, Ply);
+  Ply bestply();
 };
 
 #endif
