@@ -26,7 +26,8 @@ bool is_connected(pair<int, int> p1, pair<int, int> p2)
 }
 
 vector<Proper_Ply> Generating_proper_moves_from_selection_moves(State, Ply, Player);
-
+State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
+vector<Proper_Ply> generate_pmode_plies(State state, Player player);
 bool add_ply(map<pair<int, int>, Values> &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate)
 {
 
