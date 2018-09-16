@@ -1,5 +1,5 @@
 PROGNAME = main
-LIBS = 
+LIBS = -lboost_system
 INCLUDES = -I/usr/local/include
 LDFLAGS = -L./
 OBJECTS = main.o State.o Board.o
@@ -15,7 +15,7 @@ $(OBJECTS): Makefile
 
 %.o: %.cpp
 	@mkdir -p build
-	g++ -c $(CFLAGS) $(INCLUDES) -o build/$@ $<
+	g++ -c $(CFLAGS) $(INCLUDES) $(LIBS) -o build/$@ $<
 
 clean:
 	rm -rf build *.o $(PROGNAME)
