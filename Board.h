@@ -1,4 +1,3 @@
-
 #ifndef BOARD_H
 #define BOARD_H
 
@@ -20,6 +19,8 @@ private:
 
 public:
   Ply bestply();
+  State input_parse(string s);
+  void printboard();
 };
 
 #endif
