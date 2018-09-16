@@ -1,16 +1,110 @@
 #include "Board.h"
 #include "State.h"
+#include <iostream>
 #include <limits>
 #include <tuple>
 #include <utility>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
 auto const Placing = 10;
 auto const Number_of_rings = 5;
 auto const K = 5;
+
+Board::Board() {
+    // hex 0
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    // hex 1
+    bm.insert(make_pair(0, 0), make_pair(0, 1));
+    bm.insert(make_pair(0, 0), make_pair(1, 1));
+    bm.insert(make_pair(0, 0), make_pair(1, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, -1));
+    bm.insert(make_pair(0, 0), make_pair(-1, -1));
+    bm.insert(make_pair(0, 0), make_pair(-1, 0));
+    // hex 2
+    bm.insert(make_pair(0, 0), make_pair(0, 2));
+    bm.insert(make_pair(0, 0), make_pair(1, 2));
+    bm.insert(make_pair(0, 0), make_pair(2, 2));
+    bm.insert(make_pair(0, 0), make_pair(2, 1));
+    bm.insert(make_pair(0, 0), make_pair(2, 0));
+    bm.insert(make_pair(0, 0), make_pair(1, -1));
+    bm.insert(make_pair(0, 0), make_pair(0, -2));
+    bm.insert(make_pair(0, 0), make_pair(-1, -2));
+    bm.insert(make_pair(0, 0), make_pair(-2, -2));
+    bm.insert(make_pair(0, 0), make_pair(-2, -1));
+    bm.insert(make_pair(0, 0), make_pair(-2, 0));
+    bm.insert(make_pair(0, 0), make_pair(-1, 1));
+    // hex 3
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    // hex 4
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    // hex 5
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(0, 0), make_pair(0, 0));
+};
 
 double evaluation(const State &state) {
     return 0;
@@ -342,46 +436,39 @@ vector<Proper_Ply> generate_plies(const State &state, Player player) {
             rings = state.white_rings;
         else
             rings = state.black_rings;
-                
-        for (const auto &coordinate : rings)
-        {
-            for (auto y = coordinate.second+1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y)
-            {
+
+        for (const auto &coordinate : rings) {
+            for (auto y = coordinate.second + 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
                 if (add_ply(bmap, make_pair(coordinate.first, y), plies, coordinate))
                     break;
             }
 
-            for (auto y = coordinate.second-1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y)
-            {
+            for (auto y = coordinate.second - 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
                 if (add_ply(bmap, make_pair(coordinate.first, y), plies, coordinate))
                     break;
             }
 
-            for (auto x = coordinate.first+1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x)
-            {
+            for (auto x = coordinate.first + 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
                 if (add_ply(bmap, make_pair(x, coordinate.second), plies, coordinate))
                     break;
             }
 
-            for (auto x = coordinate.first-1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x)
-            {
+            for (auto x = coordinate.first - 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
                 if (add_ply(bmap, make_pair(x, coordinate.second), plies, coordinate))
                     break;
             }
 
-            for (auto x = coordinate.first+1, y = coordinate.second+1; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y)
-            {
+            for (auto x = coordinate.first + 1, y = coordinate.second + 1; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
                 if (add_ply(bmap, make_pair(x, y), plies, coordinate))
                     break;
             }
 
-            for (auto x = coordinate.first-1, y = coordinate.second-1; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y)
-            {
+            for (auto x = coordinate.first - 1, y = coordinate.second - 1; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
                 if (add_ply(bmap, make_pair(x, y), plies, coordinate))
                     break;
             }
         }
-        cout<<plies.size()<<"##";
+        cout << plies.size() << "##";
         proper_plies = Generating_proper_moves_from_selection_moves(state, player, plies);
         /*for (auto q = plies.begin(); q != plies.end(); q++)
         {
@@ -431,6 +518,7 @@ double alphabeta(const State &state, double alpha, double beta, int depth, Playe
 }
 
 pair<int, int> convert_to_our(pair<int, int> p) {
+
     return p;
 }
 
@@ -540,13 +628,12 @@ State Board::input_parse(string s, const State &state, const Player &player) {
 vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Player player, vector<Ply> &plies) {
     State newstate = state;
     vector<Proper_Ply> proper_p;
-    for (auto q = plies.begin(); q != plies.end(); q++)
-    {
+    for (auto q = plies.begin(); q != plies.end(); q++) {
         //cout<<(*q).first.first<<" "<<(*q).first.second<<endl;
         //cout<<(*q).second.first<<" "<<(*q).second.second<<endl;
         //cout<<endl;
         //proper_plies = Generating_proper_moves_from_selection_moves(state, *q, player, proper_plies);
-        Ply p=*q;
+        Ply p = *q;
         decltype(state.board_map)::mapped_type ring;
         decltype(state.board_map)::mapped_type marker;
         decltype(state.white_rings) &rings = newstate.white_rings;
@@ -588,7 +675,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
         int markers_left;
         int markers_right;
         pair<int, int> left_most;
-        int flag=0;
+        int flag = 0;
         for (const auto &coordinate : markers) {
             if (get<0>(marker_lines[coordinate]) == 1) {
                 markers_left = 0;
@@ -618,11 +705,9 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                             proper_p.emplace_back(p.first, p.second, make_pair(left_most.first, left_most.second + d), make_pair(left_most.first, left_most.second + 4 + d), coordinate2);
                         }
                     }
-                } 
-                else
-                {
+                } else {
                     //cout<<"inelse";
-                    flag+=1;
+                    flag += 1;
                     //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
                 }
             }
@@ -654,11 +739,9 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                             proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second), make_pair(left_most.first + 4 + d, left_most.second), coordinate2);
                         }
                     }
-                } 
-                else
-                {
+                } else {
                     //cout<<"inelse";
-                    flag+=1;
+                    flag += 1;
                     //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
                 }
             }
@@ -690,17 +773,14 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                             proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second + d), make_pair(left_most.first + 4 + d, left_most.second + 4 + d), coordinate2);
                         }
                     }
-                } 
-                else
-                {
+                } else {
                     //cout<<"inelse";
-                    flag+=1;
+                    flag += 1;
                     //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
                 }
             }
             //cout<<flag<<"$$";
-            if(flag==3)
-            {
+            if (flag == 3) {
                 //cout<<"yay";
                 proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
             }
