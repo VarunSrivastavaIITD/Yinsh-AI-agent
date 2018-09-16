@@ -5,11 +5,6 @@
 #include <vector>
 using namespace std;
 
-enum Player {
-    BLACK,
-    WHITE
-};
-
 class Board {
   public:
     State state;

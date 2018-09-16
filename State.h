@@ -1,15 +1,19 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include "Board.h"
 #include <boost/functional/hash.hpp>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
-#include <tuple>
 
 using namespace std;
+
+enum Player {
+    BLACK,
+    WHITE
+};
 
 enum Values { EMPTY,
               WHITE_RING,
