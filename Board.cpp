@@ -4,6 +4,7 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ bool is_connected(pair<int, int> p1, pair<int, int> p2) {
     return p1.first == p2.first || p1.second == p2.second || (p1.second - p1.first) == (p2.second - p2.first);
 }
 
-vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Ply p, Player player);
+vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Player player, vector<Ply> &p);
 State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
 vector<Proper_Ply> generate_pmode_plies(const State &state);
 bool add_ply(decltype(State::board_map) &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate) {
@@ -341,41 +342,54 @@ vector<Proper_Ply> generate_plies(const State &state, Player player) {
             rings = state.white_rings;
         else
             rings = state.black_rings;
-
-        for (const auto &coordinate : rings) {
-            for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
+                
+        for (const auto &coordinate : rings)
+        {
+            for (auto y = coordinate.second+1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y)
+            {
                 if (add_ply(bmap, make_pair(coordinate.first, y), plies, coordinate))
                     break;
             }
 
-            for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
+            for (auto y = coordinate.second-1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y)
+            {
                 if (add_ply(bmap, make_pair(coordinate.first, y), plies, coordinate))
                     break;
             }
 
-            for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
+            for (auto x = coordinate.first+1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x)
+            {
                 if (add_ply(bmap, make_pair(x, coordinate.second), plies, coordinate))
                     break;
             }
 
-            for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
+            for (auto x = coordinate.first-1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x)
+            {
                 if (add_ply(bmap, make_pair(x, coordinate.second), plies, coordinate))
                     break;
             }
 
-            for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
+            for (auto x = coordinate.first+1, y = coordinate.second+1; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y)
+            {
                 if (add_ply(bmap, make_pair(x, y), plies, coordinate))
                     break;
             }
 
-            for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
+            for (auto x = coordinate.first-1, y = coordinate.second-1; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y)
+            {
                 if (add_ply(bmap, make_pair(x, y), plies, coordinate))
                     break;
             }
         }
-        for (auto q = plies.begin(); q != plies.end(); q++) {
-            proper_plies = Generating_proper_moves_from_selection_moves(state, *q, player);
-        }
+        cout<<plies.size()<<"##";
+        proper_plies = Generating_proper_moves_from_selection_moves(state, player, plies);
+        /*for (auto q = plies.begin(); q != plies.end(); q++)
+        {
+            cout<<(*q).first.first<<" "<<(*q).first.second<<endl;
+            cout<<(*q).second.first<<" "<<(*q).second.second<<endl;
+            cout<<endl;
+            proper_plies = Generating_proper_moves_from_selection_moves(state, *q, player, proper_plies);
+        }*/
     }
     return proper_plies;
 }
@@ -416,8 +430,8 @@ double alphabeta(const State &state, double alpha, double beta, int depth, Playe
     return return_value;
 }
 
-pair<int, int> convert_to_our(pair<int, int>) {
-    return make_pair(0, 0);
+pair<int, int> convert_to_our(pair<int, int> p) {
+    return p;
 }
 
 State Board::input_parse(string s, const State &state, const Player &player) {
@@ -523,143 +537,173 @@ State Board::input_parse(string s, const State &state, const Player &player) {
     return newstate;
 }
 
-vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Ply p, Player player) {
+vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Player player, vector<Ply> &plies) {
     State newstate = state;
     vector<Proper_Ply> proper_p;
-    decltype(state.board_map)::mapped_type ring;
-    decltype(state.board_map)::mapped_type marker;
-    decltype(state.white_rings) &rings = newstate.white_rings;
-    decltype(state.white_rings) &otherrings = newstate.black_rings;
-    decltype(state.white_markers) &markers = newstate.white_markers;
-    decltype(state.white_markers) &othermarkers = newstate.black_markers;
+    for (auto q = plies.begin(); q != plies.end(); q++)
+    {
+        //cout<<(*q).first.first<<" "<<(*q).first.second<<endl;
+        //cout<<(*q).second.first<<" "<<(*q).second.second<<endl;
+        //cout<<endl;
+        //proper_plies = Generating_proper_moves_from_selection_moves(state, *q, player, proper_plies);
+        Ply p=*q;
+        decltype(state.board_map)::mapped_type ring;
+        decltype(state.board_map)::mapped_type marker;
+        decltype(state.white_rings) &rings = newstate.white_rings;
+        decltype(state.white_rings) &otherrings = newstate.black_rings;
+        decltype(state.white_markers) &markers = newstate.white_markers;
+        decltype(state.white_markers) &othermarkers = newstate.black_markers;
 
-    if (player == WHITE) {
-        marker = WHITE_MARKER;
-        ring = WHITE_RING;
-        markers = newstate.white_markers;
-        othermarkers = newstate.black_markers;
-        rings = newstate.white_rings;
-        otherrings = newstate.black_rings;
-    } else {
-        marker = BLACK_MARKER;
-        ring = BLACK_RING;
-        markers = newstate.black_markers;
-        othermarkers = newstate.white_markers;
-        rings = newstate.black_rings;
-        otherrings = newstate.white_rings;
-    }
-    // implementing ply before converting to properply
-    newstate.board_map[p.first] = marker;
-    newstate.board_map[p.second] = ring;
-    auto search = rings.find(p.first);
-    if (search != rings.end()) {
-        rings.erase(search);
-        rings.insert(p.second);
-    }
-    markers.insert(p.first);
-    newstate = Toggle(p.first, p.second, newstate);
-
-    map<pair<int, int>, tuple<int, int, int>> marker_lines;
-    for (auto i = markers.begin(); i != markers.end(); i++) {
-        marker_lines[*i] = make_tuple(1, 1, 1);
-    }
-    auto bmap = newstate.board_map;
-    int markers_left;
-    int markers_right;
-    pair<int, int> left_most;
-    for (const auto &coordinate : markers) {
-        if (get<0>(marker_lines[coordinate]) == 1) {
-            markers_left = 0;
-            markers_right = 0;
-            for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
-                if (bmap[make_pair(coordinate.first, y)] != marker)
-                    break;
-                else {
-                    markers_right++;
-                    get<0>(marker_lines[make_pair(coordinate.first, y)]) = 0;
-                }
-            }
-
-            for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
-                if (bmap[make_pair(coordinate.first, y)] != marker)
-                    break;
-                else {
-                    markers_left++;
-                    left_most = make_pair(coordinate.first, y);
-                    get<0>(marker_lines[make_pair(coordinate.first, y)]) = 0;
-                }
-            }
-            get<0>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
-            if (!(markers_left + markers_right + 1 < 5)) {
-                for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                    for (const auto &coordinate2 : rings) {
-                        proper_p.emplace_back(p.first, p.second, make_pair(left_most.first, left_most.second + d), make_pair(left_most.first, left_most.second + 4 + d), coordinate2);
-                    }
-                }
-            } else
-                proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
+        if (player == WHITE) {
+            marker = WHITE_MARKER;
+            ring = WHITE_RING;
+            markers = newstate.white_markers;
+            othermarkers = newstate.black_markers;
+            rings = newstate.white_rings;
+            otherrings = newstate.black_rings;
+        } else {
+            marker = BLACK_MARKER;
+            ring = BLACK_RING;
+            markers = newstate.black_markers;
+            othermarkers = newstate.white_markers;
+            rings = newstate.black_rings;
+            otherrings = newstate.white_rings;
         }
-        if (get<1>(marker_lines[coordinate]) == 1) {
-            markers_left = 0;
-            markers_right = 0;
-            for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
-                if (bmap[make_pair(x, coordinate.second)] != marker)
-                    break;
-                else {
-                    markers_right++;
-                    get<1>(marker_lines[make_pair(x, coordinate.second)]) = 0;
-                }
-            }
-
-            for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
-                if (bmap[make_pair(x, coordinate.second)] != marker)
-                    break;
-                else {
-                    markers_left++;
-                    left_most = make_pair(x, coordinate.second);
-                    get<1>(marker_lines[make_pair(x, coordinate.second)]) = 0;
-                }
-            }
-            get<1>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
-            if (!(markers_left + markers_right + 1 < 5)) {
-                for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                    for (const auto &coordinate2 : rings) {
-                        proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second), make_pair(left_most.first + 4 + d, left_most.second), coordinate2);
-                    }
-                }
-            } else
-                proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
+        // implementing ply before converting to properply
+        newstate.board_map[p.first] = marker;
+        newstate.board_map[p.second] = ring;
+        auto search = rings.find(p.first);
+        if (search != rings.end()) {
+            rings.erase(search);
+            rings.insert(p.second);
         }
-        if (get<2>(marker_lines[coordinate]) == 1) {
-            markers_left = 0;
-            markers_right = 0;
-            for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
-                if (bmap[make_pair(x, coordinate.second)] != marker)
-                    break;
-                else {
-                    markers_right++;
-                    get<2>(marker_lines[make_pair(x, y)]) = 0;
-                }
-            }
+        markers.insert(p.first);
+        newstate = Toggle(p.first, p.second, newstate);
 
-            for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
-                if (bmap[make_pair(x, y)] != marker)
-                    break;
-                else {
-                    markers_left++;
-                    left_most = make_pair(x, y);
-                    get<2>(marker_lines[make_pair(x, y)]) = 0;
-                }
-            }
-            get<2>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
-            if (!(markers_left + markers_right + 1 < 5)) {
-                for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                    for (const auto &coordinate2 : rings) {
-                        proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second + d), make_pair(left_most.first + 4 + d, left_most.second + 4 + d), coordinate2);
+        map<pair<int, int>, tuple<int, int, int>> marker_lines;
+        for (auto i = markers.begin(); i != markers.end(); i++) {
+            marker_lines[*i] = make_tuple(1, 1, 1);
+        }
+        auto bmap = newstate.board_map;
+        int markers_left;
+        int markers_right;
+        pair<int, int> left_most;
+        int flag=0;
+        for (const auto &coordinate : markers) {
+            if (get<0>(marker_lines[coordinate]) == 1) {
+                markers_left = 0;
+                markers_right = 0;
+                for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
+                    if (bmap[make_pair(coordinate.first, y)] != marker)
+                        break;
+                    else {
+                        markers_right++;
+                        get<0>(marker_lines[make_pair(coordinate.first, y)]) = 0;
                     }
                 }
-            } else
+
+                for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
+                    if (bmap[make_pair(coordinate.first, y)] != marker)
+                        break;
+                    else {
+                        markers_left++;
+                        left_most = make_pair(coordinate.first, y);
+                        get<0>(marker_lines[make_pair(coordinate.first, y)]) = 0;
+                    }
+                }
+                get<0>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
+                if (!(markers_left + markers_right + 1 < 5)) {
+                    for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
+                        for (const auto &coordinate2 : rings) {
+                            proper_p.emplace_back(p.first, p.second, make_pair(left_most.first, left_most.second + d), make_pair(left_most.first, left_most.second + 4 + d), coordinate2);
+                        }
+                    }
+                } 
+                else
+                {
+                    //cout<<"inelse";
+                    flag+=1;
+                    //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
+                }
+            }
+            if (get<1>(marker_lines[coordinate]) == 1) {
+                markers_left = 0;
+                markers_right = 0;
+                for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
+                    if (bmap[make_pair(x, coordinate.second)] != marker)
+                        break;
+                    else {
+                        markers_right++;
+                        get<1>(marker_lines[make_pair(x, coordinate.second)]) = 0;
+                    }
+                }
+
+                for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
+                    if (bmap[make_pair(x, coordinate.second)] != marker)
+                        break;
+                    else {
+                        markers_left++;
+                        left_most = make_pair(x, coordinate.second);
+                        get<1>(marker_lines[make_pair(x, coordinate.second)]) = 0;
+                    }
+                }
+                get<1>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
+                if (!(markers_left + markers_right + 1 < 5)) {
+                    for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
+                        for (const auto &coordinate2 : rings) {
+                            proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second), make_pair(left_most.first + 4 + d, left_most.second), coordinate2);
+                        }
+                    }
+                } 
+                else
+                {
+                    //cout<<"inelse";
+                    flag+=1;
+                    //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
+                }
+            }
+            if (get<2>(marker_lines[coordinate]) == 1) {
+                markers_left = 0;
+                markers_right = 0;
+                for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
+                    if (bmap[make_pair(x, coordinate.second)] != marker)
+                        break;
+                    else {
+                        markers_right++;
+                        get<2>(marker_lines[make_pair(x, y)]) = 0;
+                    }
+                }
+
+                for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
+                    if (bmap[make_pair(x, y)] != marker)
+                        break;
+                    else {
+                        markers_left++;
+                        left_most = make_pair(x, y);
+                        get<2>(marker_lines[make_pair(x, y)]) = 0;
+                    }
+                }
+                get<2>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
+                if (!(markers_left + markers_right + 1 < 5)) {
+                    for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
+                        for (const auto &coordinate2 : rings) {
+                            proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second + d), make_pair(left_most.first + 4 + d, left_most.second + 4 + d), coordinate2);
+                        }
+                    }
+                } 
+                else
+                {
+                    //cout<<"inelse";
+                    flag+=1;
+                    //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
+                }
+            }
+            //cout<<flag<<"$$";
+            if(flag==3)
+            {
+                //cout<<"yay";
                 proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
+            }
         }
     }
     return proper_p;
