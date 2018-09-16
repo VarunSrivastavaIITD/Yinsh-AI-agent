@@ -1,17 +1,26 @@
 PROGNAME = main
+TESTNAME = test
 LIBS = -lboost_system
 INCLUDES = -I/usr/local/include
 LDFLAGS = -L./
 OBJECTS = main.o State.o Board.o
+TESTOBJECTS = test.o State.o Board.o
+GAMEFILES = build/Board.o build/State.o
 CFLAGS = -Wall -Wextra -ggdb3 -std=c++11 -pedantic
 
 all: $(PROGNAME)
+test: $(TESTNAME)
 
 $(PROGNAME): $(OBJECTS)
 	@mkdir -p bin
-	g++ -ggdb3 -o bin/$(PROGNAME) build/*.o $(LIBS) $(INCLUDES) $(LDFLAGS)
+	g++ -ggdb3 -o bin/$(PROGNAME) build/$(PROGNAME).o $(GAMEFILES) $(LIBS) $(INCLUDES) $(LDFLAGS)
+
+$(TESTNAME): $(TESTOBJECTS)
+	@mkdir -p bin
+	g++ -ggdb3 -o bin/$(TESTNAME) build/$(TESTNAME).o $(GAMEFILES) $(LIBS) $(INCLUDES) $(LDFLAGS)
 
 $(OBJECTS): Makefile
+$(TESTOBJECTS): Makefile
 
 %.o: %.cpp
 	@mkdir -p build
