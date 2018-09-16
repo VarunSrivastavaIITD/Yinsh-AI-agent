@@ -27,7 +27,7 @@ bool is_connected(pair<int, int> p1, pair<int, int> p2)
 
 vector<Proper_Ply> Generating_proper_moves_from_selection_moves(State, Ply, Player);
 State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
-vector<Proper_Ply> generate_pmode_plies(State state, Player player);
+vector<Proper_Ply> generate_pmode_plies(State state);
 bool add_ply(map<pair<int, int>, Values> &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate)
 {
 
@@ -409,7 +409,7 @@ vector<Proper_Ply> generate_plies(const State &state, Player player)
     vector<Ply> plies;
     if (state.mode == P)
     {
-        proper_plies = generate_pmode_plies(state, player);
+        proper_plies = generate_pmode_plies(state);
     }
     else
     {
@@ -684,7 +684,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(State state, Ply
     map<pair<int, int>, tuple<int, int, int>> marker_lines;
     for (auto i = markers.begin(); i != markers.end(); i++)
     {
-        marker_lines.insert(*i, make_tuple(1, 1, 1));
+        marker_lines[*i] = make_tuple(1, 1, 1);
     }
     auto bmap = state.board_map;
    
@@ -814,9 +814,10 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(State state, Ply
                 proper_p.emplace_back(p.first,p.second,make_pair(10,10),make_pair(10,10),make_pair(10,10));
         }
     }
+    return proper_p;
 }
 
-vector<Proper_Ply> generate_pmode_plies(State state, Player player)
+vector<Proper_Ply> generate_pmode_plies(State state)
 {
     vector<Proper_Ply> proper_p;
     for (auto it = state.board_map.begin(); it != state.board_map.end(); ++it) 
@@ -826,6 +827,7 @@ vector<Proper_Ply> generate_pmode_plies(State state, Player player)
             proper_p.emplace_back(it->first,make_pair(10,10),make_pair(10,10),make_pair(10,10),make_pair(10,10));
         }
     }
+    return proper_p;
 }
 State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform)
 {
