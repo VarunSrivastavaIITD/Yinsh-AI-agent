@@ -1,33 +1,16 @@
-#include "Board.h"
-#include "State.h"
-#include <vector>
-#include <utility>
-#include <limits>
-#include <tuple>
-
+#include<iostream>
 using namespace std;
+#include "State.h"
+#include "Board.h"
 
 auto const Placing = 10;
 auto const Number_of_rings = 5;
 auto const K = 5;
 
-double evaluation(const State &state)
-{
-    return 0;
-}
-
-Ply Board::bestply()
-{
-}
-
-bool is_connected(pair<int, int> p1, pair<int, int> p2)
-{
-    return p1.first == p2.first || p1.second == p2.second || (p1.second - p1.first) == (p2.second - p2.first);
-}
-
 vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Ply p, Player player);
 State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
 vector<Proper_Ply> generate_pmode_plies(const State &state);
+
 bool add_ply(map<pair<int, int>, Values> &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate)
 {
 
@@ -434,188 +417,6 @@ vector<Proper_Ply> generate_plies(const State &state, Player player)
     return proper_plies;
 }
 
-double alphabeta(const State &state, double alpha, double beta, int depth, Player player)
-{
-    if (depth == 0)
-    {
-        return evaluation(state);
-    }
-
-    auto plies = generate_plies(state, player);
-    auto return_value = 0.0;
-
-    if (player == WHITE)
-    {
-        auto returned_alpha = numeric_limits<double>::min();
-        for (const auto &proper_ply : plies)
-        {
-
-            const auto nextstate = perform_proper_ply(state, player, proper_ply);
-            returned_alpha = max(returned_alpha, alphabeta(nextstate, alpha, beta, depth - 1, BLACK));
-            if (returned_alpha >= beta)
-                return returned_alpha;
-            alpha = max(alpha, returned_alpha);
-        }
-        return_value = returned_alpha;
-    }
-
-    else
-    {
-        auto returned_beta = numeric_limits<double>::max();
-        for (const auto &proper_ply : plies)
-        {
-            const auto nextstate = perform_proper_ply(state, player, proper_ply);
-            returned_beta = min(returned_beta, alphabeta(nextstate, alpha, beta, depth - 1, WHITE));
-            if (alpha >= returned_beta)
-                return returned_beta;
-            beta = min(beta, returned_beta);
-        }
-        return_value = returned_beta;
-    }
-
-    return return_value;
-}
-
-pair<int,int> convert_to_our(pair<int,int>)
-{
-    return make_pair(0,0);
-}
-
-State Board::input_parse(string s, const State &state, const Player &player)
-{   
-    
-    State newstate = state;
-    auto delete_from_set = [](decltype(newstate.black_markers) &s, const decltype(newstate.black_markers)::value_type &e) {
-        auto search = s.find(e);
-        if (search != s.end())
-            s.erase(search);
-    };
-    if (s[0] == 'P')
-    {
-        pair<int, int> p1 = convert_to_our(make_pair((int)s[1], (int)s[2]));
-        if (player == WHITE)
-        {
-            newstate.board_map[p1] = WHITE_RING;
-            newstate.white_rings.insert(p1);
-        }
-        else
-        {
-            newstate.board_map[p1] = BLACK_RING;
-            newstate.black_rings.insert(p1);
-        }
-    }
-    else if (s[0] == 'S')
-    {
-        pair<int, int> p2 = convert_to_our(make_pair((int)s[1], (int)s[2]));
-        pair<int, int> p3 = convert_to_our(make_pair((int)s[4], (int)s[5]));
-        decltype(newstate.board_map)::mapped_type ring;
-        decltype(newstate.board_map)::mapped_type marker;
-        decltype(newstate.white_rings) &rings = newstate.white_rings;
-        decltype(newstate.white_markers) &markers = newstate.white_markers;
-        decltype(newstate.white_markers) &othermarkers = newstate.black_markers;
-
-        if (player == WHITE)
-        {
-            marker = WHITE_MARKER;
-            ring = WHITE_RING;
-            markers = newstate.white_markers;
-            othermarkers = newstate.black_markers;
-            rings = newstate.white_rings;
-        }
-        else
-        {
-            marker = BLACK_MARKER;
-            ring = BLACK_RING;
-            markers = newstate.black_markers;
-            othermarkers = newstate.white_markers;
-            rings = newstate.black_rings;
-        }
-        newstate.board_map[p2] = marker;
-        newstate.board_map[p3] = ring;
-
-        auto search = rings.find(p2);
-        if (search != rings.end())
-            rings.erase(search);
-
-        rings.insert(p3);   //add p3 to rings
-        markers.insert(p2); //add p2 to markers
-        //toggle & change white&blackmarker, board_map
-        newstate = Toggle(p2, p3, newstate);
-
-        if (s.length() > 6)
-        {
-            int k=6;
-            while(s[k]!='\0')
-            {
-                pair<int, int> p4 = convert_to_our(make_pair((int)s[k+2], (int)s[k+3]));
-                pair<int, int> p5 = convert_to_our(make_pair((int)s[k+6], (int)s[k+7]));
-                pair<int, int> p6 = convert_to_our(make_pair((int)s[k+9], (int)s[k+10]));
-                if (p4.first == p5.first)
-                {
-                    if (p5.second > p4.second)
-                    {
-                        for (int i = p4.second; i <= p5.second; i++)
-                        {
-                            newstate.board_map[make_pair(p4.first, i)] = EMPTY;
-                            delete_from_set(markers, make_pair(p4.first, i));
-                        }
-                    }
-                    else
-                    {
-                        for (int i = p4.second; i >= p5.second; i--)
-                        {
-                            newstate.board_map[make_pair(p4.first, i)] = EMPTY;
-                            delete_from_set(markers, make_pair(p4.first, i));
-                        }
-                    }
-                }
-                else if (p4.second == p5.second)
-                {
-                    if (p5.first > p4.first)
-                    {
-                        for (int i = p4.first; i <= p5.first; i++)
-                        {
-                            newstate.board_map[make_pair(i, p4.second)] = EMPTY;
-                            delete_from_set(markers, make_pair(i, p4.second));
-                        }
-                    }
-                    else
-                    {
-                        for (int i = p4.first; i >= p5.first; i--)
-                        {
-                            newstate.board_map[make_pair(i, p4.second)] = EMPTY;
-                            delete_from_set(markers, make_pair(i, p4.second));
-                        }
-                    }
-                }
-                else
-                {
-                    if (p5.first > p4.first)
-                    {
-                        for (int i = p4.first, j = p4.second; i <= p5.first; i++, j++)
-                        {
-                            newstate.board_map[make_pair(i, j)] = EMPTY;
-                            delete_from_set(markers, make_pair(i, j));
-                        }
-                    }
-                    else
-                    {
-                        for (int i = p4.first, j = p4.second; i >= p5.first; i--, j--)
-                        {
-                            newstate.board_map[make_pair(i, j)] = EMPTY;
-                            delete_from_set(markers, make_pair(i, j));
-                        }
-                    }
-                }
-                newstate.board_map[p6] = EMPTY;
-                delete_from_set(rings, p6);
-                k=k+13;
-            }
-        }
-    }
-    return newstate;
-}
-
 vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Ply p, Player player)
 {
     State newstate = state;
@@ -943,4 +744,12 @@ State perform_proper_ply(const State &state, const Player &player, const Proper_
 void Board::printboard()
 {
     
+}
+
+int main()
+{
+    State s;
+    s.board_map[make_pair(0,0)] = WHITE_RING;
+    Player p = WHITE;
+    generate_plies(s,p);
 }

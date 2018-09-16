@@ -13,13 +13,12 @@ enum Player
 
 class Board
 {
-private:
+public:
   State state;
   Player player;
-
-public:
   Ply bestply();
-  State input_parse(string s);
+  State input_parse(string s, const State &state, const Player &player);
+  vector<Proper_Ply> generate_plies(const State &state, Player player);
   void printboard();
 };
 

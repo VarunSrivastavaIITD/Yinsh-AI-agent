@@ -9,6 +9,9 @@
 
 using namespace std;
 
+// proper ply
+// string to proper
+// insert if
 enum Values
 {
   EMPTY,
