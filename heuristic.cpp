@@ -80,10 +80,6 @@ long ring_moves_heuristic(const State &state, const Player &player) {
 }
 
 long ring_connected_heuristic(const State &state, const Player &player) {
-    // auto is_connected = [](const State::Coordinate& p1, const State::Coordinate& p2) -> bool {
-    //     return p1.first == p2.first || p1.second == p2.second || (p1.second - p1.first) == (p2.second - p2.first);
-    // };
-
     std::vector<State::Coordinate> coords;
     for (const auto &m : state.board_map)
         coords.push_back(m.first);
@@ -103,7 +99,7 @@ long ring_controlled_heuristic(const State &state, const Player &player) {
     return 0;
 }
 
-boost::function<long(const State &state, const Player &player)> heuristic_combinator(const vector<long> &weights, const vector<Heuristic> &heuristics) {
+auto heuristic_combinator = [](const vector<long> &weights, const vector<Heuristic> &heuristics) {
     auto f = [&](const State &state, const Player &player) -> long {
         long res = 0;
         for (const auto &tup : boost::combine(weights, heuristics)) {
@@ -114,7 +110,5 @@ boost::function<long(const State &state, const Player &player)> heuristic_combin
             res += w * h(state, player);
         }
     };
-
-    boost::function<long(const State &state, const Player &player)> return_func = f;
-    return return_func;
+    return f;
 }
