@@ -19,7 +19,7 @@ decltype(State::white_markers) &State::get_player_markers(const Player &player) 
     switch (player) {
     case WHITE:
         return white_markers;
-    case BLACK:
+    default:
         return black_markers;
     }
 }
@@ -28,7 +28,7 @@ decltype(State::white_rings) &State::get_other_player_rings(const Player &player
     switch (player) {
     case WHITE:
         return black_rings;
-    case BLACK:
+    default:
         return white_rings;
     }
 }
@@ -37,7 +37,7 @@ decltype(State::white_markers) &State::get_other_player_markers(const Player &pl
     switch (player) {
     case WHITE:
         return black_markers;
-    case BLACK:
+    default:
         return white_markers;
     }
 }
@@ -46,7 +46,7 @@ decltype(State::white_rings) &State::get_player_rings(const Player &player) {
     switch (player) {
     case WHITE:
         return white_rings;
-    case BLACK:
+    default:
         return black_rings;
     }
 }
@@ -55,7 +55,7 @@ const decltype(State::white_markers) &State::get_player_markers(const Player &pl
     switch (player) {
     case WHITE:
         return white_markers;
-    case BLACK:
+    default:
         return black_markers;
     }
 }
@@ -64,7 +64,7 @@ const decltype(State::white_rings) &State::get_other_player_rings(const Player &
     switch (player) {
     case WHITE:
         return black_rings;
-    case BLACK:
+    default:
         return white_rings;
     }
 }
@@ -73,7 +73,7 @@ const decltype(State::white_markers) &State::get_other_player_markers(const Play
     switch (player) {
     case WHITE:
         return black_markers;
-    case BLACK:
+    default:
         return white_markers;
     }
 }
@@ -82,7 +82,7 @@ const decltype(State::white_rings) &State::get_player_rings(const Player &player
     switch (player) {
     case WHITE:
         return white_rings;
-    case BLACK:
+    default:
         return black_rings;
     }
 }
