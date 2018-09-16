@@ -19,7 +19,7 @@ bool is_connected(pair<int, int> p1, pair<int, int> p2)
     return p1.first == p2.first || p1.second == p2.second || (p1.second - p1.first) == (p2.second - p2.first);
 }
 
-bool add_ply(map<pair<int, int>, Values> &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate)
+bool add_ply(unordered_map<pair<int, int>, Values, boost::hash<pair<int, int>>> &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate)
 {
 
     switch (bmap[p])
@@ -204,24 +204,24 @@ double alphabeta(const State &state, double alpha, double beta, int depth, Playe
 State input_parse(const State &state, string s, const Player &player)
 {
     State newstate = state;
-    if(s[0]=='P')
+    if (s[0] == 'P')
     {
-        pair <int,int> p1= make_pair((int)s[1],(int)s[2]);
-        if(player ==  WHITE)
+        pair<int, int> p1 = make_pair((int)s[1], (int)s[2]);
+        if (player == WHITE)
         {
-            newstate.board_map[p1] = WHITE_RING; 
+            newstate.board_map[p1] = WHITE_RING;
             newstate.white_rings.insert(p1);
-        } 
+        }
         else
         {
-            newstate.board_map[p1] = BLACK_RING; 
+            newstate.board_map[p1] = BLACK_RING;
             newstate.black_rings.insert(p1);
         }
     }
-    else if(s[0]=='S')
+    else if (s[0] == 'S')
     {
-        pair <int,int> p2= make_pair((int)s[1],(int)s[2]);
-        pair <int,int> p3= make_pair((int)s[4],(int)s[5]);
+        pair<int, int> p2 = make_pair((int)s[1], (int)s[2]);
+        pair<int, int> p3 = make_pair((int)s[4], (int)s[5]);
         decltype(newstate.board_map)::mapped_type ring;
         decltype(newstate.board_map)::mapped_type marker;
         decltype(newstate.board_map)::mapped_type othermarker;
@@ -237,7 +237,6 @@ State input_parse(const State &state, string s, const Player &player)
             markers = newstate.white_markers;
             othermarkers = newstate.black_markers;
             rings = newstate.white_rings;
-            
         }
         else
         {
@@ -252,119 +251,119 @@ State input_parse(const State &state, string s, const Player &player)
         newstate.board_map[p3] = ring;
 
         auto search = rings.find(p2);
-        if(search != rings.end())
+        if (search != rings.end())
             rings.erase(search);
-        
-        rings.insert(p3);        //add p3 to rings
-        markers.insert(p2);     //add p2 to markers
+
+        rings.insert(p3);   //add p3 to rings
+        markers.insert(p2); //add p2 to markers
         //toggle & change white&blackmarker, board_map
-        if(p2.first == p3.first)
+        if (p2.first == p3.first)
         {
-            if(p3.second>p2.second)
+            if (p3.second > p2.second)
             {
-                for(int i=p2.second; i<=p3.second; i++)
+                for (int i = p2.second; i <= p3.second; i++)
                 {
-                    if(newstate.board_map[make_pair(p2.first,i)] == marker)
+                    if (newstate.board_map[make_pair(p2.first, i)] == marker)
                     {
-                        auto search = markers.find(make_pair(p2.first,i));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
-                        othermarkers.insert(make_pair(p2.first,i));
+                        auto search = markers.find(make_pair(p2.first, i));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
+                        othermarkers.insert(make_pair(p2.first, i));
                     }
-                    else if(newstate.board_map[make_pair(p2.first,i)] == othermarker)
+                    else if (newstate.board_map[make_pair(p2.first, i)] == othermarker)
                     {
-                        auto search = othermarkers.find(make_pair(p2.first,i));
-                        if(search != othermarkers.end())
-                            othermarkers.erase(search);//remove from markers
-                        markers.insert(make_pair(p2.first,i));
+                        auto search = othermarkers.find(make_pair(p2.first, i));
+                        if (search != othermarkers.end())
+                            othermarkers.erase(search); //remove from markers
+                        markers.insert(make_pair(p2.first, i));
                     }
                 }
             }
             else
             {
-                for(int i=p2.second; i>=p3.second; i--)
+                for (int i = p2.second; i >= p3.second; i--)
                 {
-                    if(newstate.board_map[make_pair(p2.first,i)] == marker)
+                    if (newstate.board_map[make_pair(p2.first, i)] == marker)
                     {
-                        auto search = markers.find(make_pair(p2.first,i));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
-                        othermarkers.insert(make_pair(p2.first,i));
+                        auto search = markers.find(make_pair(p2.first, i));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
+                        othermarkers.insert(make_pair(p2.first, i));
                     }
-                    else if(newstate.board_map[make_pair(p2.first,i)] == othermarker)
+                    else if (newstate.board_map[make_pair(p2.first, i)] == othermarker)
                     {
-                        auto search = othermarkers.find(make_pair(p2.first,i));
-                        if(search != othermarkers.end())
-                            othermarkers.erase(search);//remove from markers
-                        markers.insert(make_pair(p2.first,i));
+                        auto search = othermarkers.find(make_pair(p2.first, i));
+                        if (search != othermarkers.end())
+                            othermarkers.erase(search); //remove from markers
+                        markers.insert(make_pair(p2.first, i));
                     }
                 }
             }
         }
-        else if(p2.second == p3.second)
+        else if (p2.second == p3.second)
         {
-            if(p3.first>p2.first)
+            if (p3.first > p2.first)
             {
-                for(int i=p2.first; i<=p3.first; i++)
+                for (int i = p2.first; i <= p3.first; i++)
                 {
-                    if(newstate.board_map[make_pair(p2.first,i)] == marker)
+                    if (newstate.board_map[make_pair(p2.first, i)] == marker)
                     {
-                        auto search = markers.find(make_pair(p2.first,i));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
-                        othermarkers.insert(make_pair(p2.first,i));
+                        auto search = markers.find(make_pair(p2.first, i));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
+                        othermarkers.insert(make_pair(p2.first, i));
                     }
-                    else if(newstate.board_map[make_pair(p2.first,i)] == othermarker)
+                    else if (newstate.board_map[make_pair(p2.first, i)] == othermarker)
                     {
-                        auto search = othermarkers.find(make_pair(p2.first,i));
-                        if(search != othermarkers.end())
-                            othermarkers.erase(search);//remove from markers
-                        markers.insert(make_pair(p2.first,i));
+                        auto search = othermarkers.find(make_pair(p2.first, i));
+                        if (search != othermarkers.end())
+                            othermarkers.erase(search); //remove from markers
+                        markers.insert(make_pair(p2.first, i));
                     }
                 }
             }
             else
             {
-                for(int i=p2.first; i>=p3.first; i--)
+                for (int i = p2.first; i >= p3.first; i--)
                 {
-                    newstate.board_map[make_pair(i,p2.second)] = EMPTY;
-                    auto search = markers.find(make_pair(i,p2.second));
-                    if(search != markers.end())
-                        markers.erase(search);//remove from markers
+                    newstate.board_map[make_pair(i, p2.second)] = EMPTY;
+                    auto search = markers.find(make_pair(i, p2.second));
+                    if (search != markers.end())
+                        markers.erase(search); //remove from markers
                 }
             }
         }
         else
         {
-            if(p3.first>p2.first)
+            if (p3.first > p2.first)
             {
-                for(int i=p2.first, j=p2.second; i<=p3.first; i++,j++)
+                for (int i = p2.first, j = p2.second; i <= p3.first; i++, j++)
                 {
-                    newstate.board_map[make_pair(i,j)] = EMPTY;
-                    auto search = markers.find(make_pair(i,j));
-                    if(search != markers.end())
-                        markers.erase(search);//remove from markers
+                    newstate.board_map[make_pair(i, j)] = EMPTY;
+                    auto search = markers.find(make_pair(i, j));
+                    if (search != markers.end())
+                        markers.erase(search); //remove from markers
                 }
             }
             else
             {
-                for(int i=p2.first, j=p2.second; i>=p3.first; i--,j--)
+                for (int i = p2.first, j = p2.second; i >= p3.first; i--, j--)
                 {
-                    newstate.board_map[make_pair(i,j)] = EMPTY;
-                    auto search = markers.find(make_pair(i,j));
-                    if(search != markers.end())
-                        markers.erase(search);//remove from markers
+                    newstate.board_map[make_pair(i, j)] = EMPTY;
+                    auto search = markers.find(make_pair(i, j));
+                    if (search != markers.end())
+                        markers.erase(search); //remove from markers
                 }
             }
         }
-        if(s.length()>6)
+        if (s.length() > 6)
         {
-            pair <int,int> p4= make_pair((int)s[8],(int)s[9]);
-            pair <int,int> p5= make_pair((int)s[12],(int)s[13]);
-            pair <int,int> p6= make_pair((int)s[15],(int)s[16]);
+            pair<int, int> p4 = make_pair((int)s[8], (int)s[9]);
+            pair<int, int> p5 = make_pair((int)s[12], (int)s[13]);
+            pair<int, int> p6 = make_pair((int)s[15], (int)s[16]);
             decltype(newstate.white_rings) rings;
             decltype(newstate.white_markers) markers;
-            if(player == WHITE)
+            if (player == WHITE)
             {
                 rings = newstate.white_rings;
                 markers = newstate.white_markers;
@@ -374,81 +373,80 @@ State input_parse(const State &state, string s, const Player &player)
                 rings = newstate.black_rings;
                 markers = newstate.black_markers;
             }
-            if(p4.first == p5.first)
+            if (p4.first == p5.first)
             {
-                if(p5.second>p4.second)
+                if (p5.second > p4.second)
                 {
-                    for(int i=p4.second; i<=p5.second; i++)
+                    for (int i = p4.second; i <= p5.second; i++)
                     {
-                        newstate.board_map[make_pair(p4.first,i)] = EMPTY;
-                        auto search = markers.find(make_pair(p4.first,i));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
+                        newstate.board_map[make_pair(p4.first, i)] = EMPTY;
+                        auto search = markers.find(make_pair(p4.first, i));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
                     }
                 }
                 else
                 {
-                    for(int i=p4.second; i>=p5.second; i--)
+                    for (int i = p4.second; i >= p5.second; i--)
                     {
-                        newstate.board_map[make_pair(p4.first,i)] = EMPTY;
-                        auto search = markers.find(make_pair(p4.first,i));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
+                        newstate.board_map[make_pair(p4.first, i)] = EMPTY;
+                        auto search = markers.find(make_pair(p4.first, i));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
                     }
                 }
             }
-            else if(p4.second == p5.second)
+            else if (p4.second == p5.second)
             {
-                if(p5.first>p4.first)
+                if (p5.first > p4.first)
                 {
-                    for(int i=p4.first; i<=p5.first; i++)
+                    for (int i = p4.first; i <= p5.first; i++)
                     {
-                        newstate.board_map[make_pair(i,p4.second)] = EMPTY;
-                        auto search = markers.find(make_pair(i,p4.second));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
+                        newstate.board_map[make_pair(i, p4.second)] = EMPTY;
+                        auto search = markers.find(make_pair(i, p4.second));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
                     }
                 }
                 else
                 {
-                    for(int i=p4.first; i>=p5.first; i--)
+                    for (int i = p4.first; i >= p5.first; i--)
                     {
-                        newstate.board_map[make_pair(i,p4.second)] = EMPTY;
-                        auto search = markers.find(make_pair(i,p4.second));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
+                        newstate.board_map[make_pair(i, p4.second)] = EMPTY;
+                        auto search = markers.find(make_pair(i, p4.second));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
                     }
                 }
             }
             else
             {
-                if(p5.first>p4.first)
+                if (p5.first > p4.first)
                 {
-                    for(int i=p4.first, j=p4.second; i<=p5.first; i++,j++)
+                    for (int i = p4.first, j = p4.second; i <= p5.first; i++, j++)
                     {
-                        newstate.board_map[make_pair(i,j)] = EMPTY;
-                        auto search = markers.find(make_pair(i,j));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
+                        newstate.board_map[make_pair(i, j)] = EMPTY;
+                        auto search = markers.find(make_pair(i, j));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
                     }
                 }
                 else
                 {
-                    for(int i=p4.first, j=p4.second; i>=p5.first; i--,j--)
+                    for (int i = p4.first, j = p4.second; i >= p5.first; i--, j--)
                     {
-                        newstate.board_map[make_pair(i,j)] = EMPTY;
-                        auto search = markers.find(make_pair(i,j));
-                        if(search != markers.end())
-                            markers.erase(search);//remove from markers
+                        newstate.board_map[make_pair(i, j)] = EMPTY;
+                        auto search = markers.find(make_pair(i, j));
+                        if (search != markers.end())
+                            markers.erase(search); //remove from markers
                     }
                 }
             }
-            newstate.board_map[p6]=EMPTY;
+            newstate.board_map[p6] = EMPTY;
             auto search = rings.find(p6);
-            if(search != rings.end())
-                rings.erase(search);//remove from rings
+            if (search != rings.end())
+                rings.erase(search); //remove from rings
         }
     }
     return newstate;
 }
-
