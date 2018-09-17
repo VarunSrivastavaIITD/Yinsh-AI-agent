@@ -19,9 +19,10 @@ class Board {
 
     Board();
     Ply bestply();
-    State input_parse(string s, const State &state, const Player &player);
+    State input_parse(string s, const Player &player);
     pair<int, int> hex_to_coord(pair<int, int>);
     pair<int, int> coord_to_hex(pair<int, int>);
+    bool is_game_over() const;
     void printboard();
 };
 

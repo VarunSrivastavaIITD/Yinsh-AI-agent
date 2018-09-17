@@ -558,7 +558,7 @@ pair<int, int> Board::coord_to_hex(pair<int, int> p) {
     return bm.right.at(p);
 }
 
-State Board::input_parse(string s, const State &state, const Player &player) {
+State Board::input_parse(string s, const Player &player) {
 
     State newstate = state;
     auto delete_from_set = [](decltype(newstate.black_markers) &s, const decltype(newstate.black_markers)::value_type &e) {
@@ -1110,11 +1110,16 @@ State checkfor5(const State &state, const Player &player) {
     return newstate;
 }
 
-bool Isterminal(const State &state)
-{
-    if((state.mode==S) && (state.white_rings.size()<3)&&((state.white_rings.size()<3)))
-    {
+bool Isterminal(const State &state) {
+    if ((state.mode == S) && (state.white_rings.size() < 3) && ((state.white_rings.size() < 3))) {
         return true;
+    }
+    return false;
+}
+
+bool Board::is_game_over() const {
+    if (state.mode != P) {
+        return state.black_rings.size() == 3 || state.white_rings.size() == 3;
     }
     return false;
 }
