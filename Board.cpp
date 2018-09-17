@@ -877,8 +877,9 @@ State perform_proper_ply(const State &state, const Player &player, const Proper_
         if (rings.size() == Number_of_rings && otherrings.size() == Number_of_rings) {
             newstate.mode = S;
         }
+        return newstate;
     } else if (get<2>(proper_ply_toperform) == make_pair(10, 10)) {
-        cout << "incorrect";
+        //cout << "incorrect";
         newstate.board_map[get<0>(proper_ply_toperform)] = marker;
         newstate.board_map[get<1>(proper_ply_toperform)] = ring;
         auto search = rings.find(get<0>(proper_ply_toperform));
@@ -888,6 +889,7 @@ State perform_proper_ply(const State &state, const Player &player, const Proper_
         }
         markers.insert(get<0>(proper_ply_toperform));
         newstate = Toggle(get<0>(proper_ply_toperform), get<1>(proper_ply_toperform), newstate);
+        return newstate;
     } else {
         newstate.board_map[get<0>(proper_ply_toperform)] = marker;
         newstate.board_map[get<1>(proper_ply_toperform)] = ring;
@@ -1122,4 +1124,50 @@ bool Board::is_game_over() const {
         return state.black_rings.size() == 3 || state.white_rings.size() == 3;
     }
     return false;
+}
+
+string outout_parse(const Proper_Ply &proper_ply_tooutput) {
+    string s;
+
+    if (get<1>(proper_ply_tooutput) == make_pair(10, 10)) {
+        s = "P ";
+        s = s + to_string(get<0>(proper_ply_tooutput).first);
+        s = s + " ";
+        s = s + to_string(get<0>(proper_ply_tooutput).second);
+        return s;
+        //s[2] = (char)
+    } else if (get<2>(proper_ply_tooutput) == make_pair(10, 10)) {
+        s = "S ";
+        s = s + to_string(get<0>(proper_ply_tooutput).first);
+        s = s + " ";
+        s = s + to_string(get<0>(proper_ply_tooutput).second);
+        s = s + " M ";
+        s = s + to_string(get<1>(proper_ply_tooutput).first);
+        s = s + " ";
+        s = s + to_string(get<1>(proper_ply_tooutput).second);
+        return s;
+    } else {
+        s = "S ";
+        s = s + to_string(get<0>(proper_ply_tooutput).first);
+        s = s + " ";
+        s = s + to_string(get<0>(proper_ply_tooutput).second);
+        s = s + " M ";
+        s = s + to_string(get<1>(proper_ply_tooutput).first);
+        s = s + " ";
+        s = s + to_string(get<1>(proper_ply_tooutput).second);
+        s = s + " RS ";
+        s = s + to_string(get<2>(proper_ply_tooutput).first);
+        s = s + " ";
+        s = s + to_string(get<2>(proper_ply_tooutput).second);
+        s = s + " RE ";
+        s = s + to_string(get<3>(proper_ply_tooutput).first);
+        s = s + " ";
+        s = s + to_string(get<3>(proper_ply_tooutput).second);
+        s = s + " X ";
+        s = s + to_string(get<4>(proper_ply_tooutput).first);
+        s = s + " ";
+        s = s + to_string(get<4>(proper_ply_tooutput).second);
+        return s;
+    }
+    return s;
 }
