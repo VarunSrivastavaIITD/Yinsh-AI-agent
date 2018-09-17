@@ -14,7 +14,13 @@ auto const Placing = 10;
 auto const Number_of_rings = 5;
 auto const K = 5;
 
-Board::Board() {
+vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Player player, vector<Ply> &p);
+State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
+vector<Proper_Ply> generate_pmode_plies(const State &state);
+double negascout(State &state, double alpha, double beta, int depth, Player player);
+
+Board::Board(Player p) {
+    player = p;
     // hex 0
     bm.insert(bm_value_type(make_pair(0, 0), make_pair(0, 0)));
     // hex 1
@@ -108,16 +114,30 @@ Board::Board() {
     bm.insert(bm_value_type(make_pair(5, 29), make_pair(-1, 4)));
 };
 
-Ply Board::bestply() {
+Proper_Ply Board::bestply(int depth) {
+    auto plies = generate_plies(state, player);
+    Proper_Ply best_ply;
+    Player other_player;
+    if (player == WHITE)
+        other_player = BLACK;
+    else
+        other_player = WHITE;
+    auto score = numeric_limits<double>::min();
+    for (auto it = plies.begin(); it != plies.end(); ++it) {
+        auto child = perform_proper_ply(state, player, *it);
+        auto s = -negascout(child, -100, 100, depth - 1, other_player);
+        if (s > score) {
+            score = s;
+            best_ply = *it;
+        }
+    }
+    return best_ply;
 }
 
 bool is_connected(pair<int, int> p1, pair<int, int> p2) {
     return p1.first == p2.first || p1.second == p2.second || (p1.second - p1.first) == (p2.second - p2.first);
 }
 
-vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Player player, vector<Ply> &p);
-State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
-vector<Proper_Ply> generate_pmode_plies(const State &state);
 bool add_ply(decltype(State::board_map) &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate) {
 
     switch (bmap[p]) {
@@ -466,7 +486,7 @@ vector<Proper_Ply> generate_plies(const State &state, Player player) {
                     break;
             }
         }
-        cout << plies.size() << "##";
+        // cout << plies.size() << "##";
         proper_plies = Generating_proper_moves_from_selection_moves(state, player, plies);
         /*for (auto q = plies.begin(); q != plies.end(); q++)
         {
@@ -558,7 +578,7 @@ pair<int, int> Board::coord_to_hex(pair<int, int> p) {
     return bm.right.at(p);
 }
 
-State Board::input_parse(string s, const Player &player) {
+void Board::input_parse(string s, const Player &player) {
 
     State newstate = state;
     auto delete_from_set = [](decltype(newstate.black_markers) &s, const decltype(newstate.black_markers)::value_type &e) {
@@ -662,7 +682,7 @@ State Board::input_parse(string s, const Player &player) {
     }
     //cout<<"&&"<<newstate.board_map[make_pair(5,  4)]<<endl;
     //cout<<"&&"<<newstate.board_map[make_pair(3,  2)]<<endl;
-    return newstate;
+    state = std::move(newstate);
 }
 
 vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Player player, vector<Ply> &plies) {
@@ -950,8 +970,11 @@ State perform_proper_ply(const State &state, const Player &player, const Proper_
 void Board::printboard() {
 }
 
-State checkfor5(const State &state, const Player &player) {
+void Board::checkfor5() {
     State newstate = state;
+    std::vector<State::Coordinate> coords;
+    for (const auto &m : state.board_map)
+        coords.push_back(m.first);
     auto delete_from_set = [](decltype(newstate.black_markers) &s, const decltype(newstate.black_markers)::value_type &e) {
         auto search = s.find(e);
         if (search != s.end())
@@ -1028,6 +1051,19 @@ State checkfor5(const State &state, const Player &player) {
                     //remove a ring
                     //proper_p.emplace_back(p.first, p.second, make_pair(left_most.first, left_most.second + d), make_pair(left_most.first, left_most.second + 4 + d), coordinate2);
                 }*/
+                long count = 0;
+                State::Coordinate ring;
+                for (const auto &r : rings) {
+                    auto res = std::count_if(coords.begin(), coords.end(), [&r](const State::Coordinate &x) {
+                        return r.first == x.first || r.second == x.second || (r.second - r.first) == (x.second - x.first);
+                    });
+                    if (res < count) {
+                        count = res;
+                        ring = r;
+                    }
+                }
+
+                delete_from_set(rings, ring);
             } else {
                 //cout<<"inelse";
                 //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
@@ -1063,6 +1099,21 @@ State checkfor5(const State &state, const Player &player) {
                     delete_from_set(markers, make_pair(i, left_most.second));
                     //proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second), make_pair(left_most.first + 4 + d, left_most.second), coordinate2);
                 }
+
+                long count = 0;
+                State::Coordinate ring;
+                for (const auto &r : rings) {
+                    auto res = std::count_if(coords.begin(), coords.end(), [&r](const State::Coordinate &x) {
+                        return r.first == x.first || r.second == x.second || (r.second - r.first) == (x.second - x.first);
+                    });
+                    if (res < count) {
+                        count = res;
+                        ring = r;
+                    }
+                }
+
+                delete_from_set(rings, ring);
+
                 //for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {}
             } else {
                 //cout<<"inelse";
@@ -1103,13 +1154,26 @@ State checkfor5(const State &state, const Player &player) {
                         //proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second + d), make_pair(left_most.first + 4 + d, left_most.second + 4 + d), coordinate2);
                     }
                 }*/
+                long count = 0;
+                State::Coordinate ring;
+                for (const auto &r : rings) {
+                    auto res = std::count_if(coords.begin(), coords.end(), [&r](const State::Coordinate &x) {
+                        return r.first == x.first || r.second == x.second || (r.second - r.first) == (x.second - x.first);
+                    });
+                    if (res < count) {
+                        count = res;
+                        ring = r;
+                    }
+                }
+
+                delete_from_set(rings, ring);
             } else {
                 //cout<<"inelse";
                 //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
             }
         }
     }
-    return newstate;
+    state = std::move(newstate);
 }
 
 bool Isterminal(const State &state) {
@@ -1126,7 +1190,7 @@ bool Board::is_game_over() const {
     return false;
 }
 
-string outout_parse(const Proper_Ply &proper_ply_tooutput) {
+string output_parse(const Proper_Ply &proper_ply_tooutput) {
     string s;
 
     if (get<1>(proper_ply_tooutput) == make_pair(10, 10)) {
