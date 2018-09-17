@@ -916,8 +916,7 @@ State perform_proper_ply(const State &state, const Player &player, const Proper_
 void Board::printboard() {
 }
 
-State checkfor5(const State &state, const Player &player)
-{
+State checkfor5(const State &state, const Player &player) {
     State newstate = state;
     auto delete_from_set = [](decltype(newstate.black_markers) &s, const decltype(newstate.black_markers)::value_type &e) {
         auto search = s.find(e);
@@ -954,11 +953,13 @@ State checkfor5(const State &state, const Player &player)
     for (auto i = markers.begin(); i != markers.end(); i++) {
         marker_lines[*i] = make_tuple(1, 1, 1);
     }
-    auto bmap = newstate.board_map;
+    auto &bmap = newstate.board_map;
     int markers_left;
     int markers_right;
     pair<int, int> left_most;
     for (const auto &coordinate : markers) {
+        if (markers.size() == 0)
+            break;
         if (get<0>(marker_lines[coordinate]) == 1) {
             markers_left = 0;
             markers_right = 0;
@@ -983,14 +984,16 @@ State checkfor5(const State &state, const Player &player)
             //cout<<markers_left<<"L ";
             get<0>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
             if (!(markers_left + markers_right + 1 < 5)) {
-                for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                    for (int i = left_most.second + d; i <= left_most.second + d + 4; i++) {
-                        newstate.board_map[make_pair(left_most.first, i)] = EMPTY;
-                        delete_from_set(markers, make_pair(left_most.first, i));
-                    }
+                for (int i = left_most.second + 0; i <= left_most.second + 0 + 4; i++) {
+                    cout << "hey1";
+                    bmap[make_pair(left_most.first, i)] = EMPTY;
+                    delete_from_set(markers, make_pair(left_most.first, i));
+                }
+                /*for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
+                  
                     //remove a ring
                     //proper_p.emplace_back(p.first, p.second, make_pair(left_most.first, left_most.second + d), make_pair(left_most.first, left_most.second + 4 + d), coordinate2);
-                }
+                }*/
             } else {
                 //cout<<"inelse";
                 //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
@@ -1019,13 +1022,14 @@ State checkfor5(const State &state, const Player &player)
             }
             get<1>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
             if (!(markers_left + markers_right + 1 < 5)) {
-                for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                    for (int i = left_most.first + d; i <= left_most.first + d; i++) {
-                        newstate.board_map[make_pair(i, left_most.second)] = EMPTY;
-                        delete_from_set(markers, make_pair(i, left_most.second));
-                        //proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second), make_pair(left_most.first + 4 + d, left_most.second), coordinate2);
-                    }
+                for (int i = left_most.first + 0; i <= left_most.first + 0 + 4; i++) {
+                    cout << "hey2";
+                    cout << left_most.second << " " << left_most.first;
+                    bmap[make_pair(i, left_most.second)] = EMPTY;
+                    delete_from_set(markers, make_pair(i, left_most.second));
+                    //proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second), make_pair(left_most.first + 4 + d, left_most.second), coordinate2);
                 }
+                //for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {}
             } else {
                 //cout<<"inelse";
                 //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
@@ -1054,19 +1058,22 @@ State checkfor5(const State &state, const Player &player)
             }
             get<2>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
             if (!(markers_left + markers_right + 1 < 5)) {
-                for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                    for (int i = left_most.first + d, j = left_most.second + d; i <= left_most.first + d + 4; i++, j++) {
-                        newstate.board_map[make_pair(i, j)] = EMPTY;
-                        delete_from_set(markers, make_pair(i, j));
-                    }
+                for (int i = left_most.first + 0, j = left_most.second + 0; i <= left_most.first + 0 + 4; i++, j++) {
+                    cout << "hey3";
+                    bmap[make_pair(i, j)] = EMPTY;
+                    delete_from_set(markers, make_pair(i, j));
+                }
+                /*for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
+                    
                     for (const auto &coordinate2 : rings) {
                         //proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second + d), make_pair(left_most.first + 4 + d, left_most.second + 4 + d), coordinate2);
                     }
-                }
+                }*/
             } else {
                 //cout<<"inelse";
                 //proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
             }
         }
     }
+    return newstate;
 }
