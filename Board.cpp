@@ -587,7 +587,7 @@ void Board::input_parse(string s, const Player &player) {
             s.erase(search);
     };
     if (s[0] == 'P') {
-        pair<int, int> p1 = hex_to_coord(make_pair((int)s[1], (int)s[2]));
+        pair<int, int> p1 = hex_to_coord(make_pair(stoi(s.substr(2, 3)), stoi(s.substr(4, 5))));
         if (player == WHITE) {
             newstate.board_map[p1] = WHITE_RING;
             newstate.white_rings.insert(p1);
@@ -596,8 +596,8 @@ void Board::input_parse(string s, const Player &player) {
             newstate.black_rings.insert(p1);
         }
     } else if (s[0] == 'S') {
-        pair<int, int> p2 = hex_to_coord(make_pair((int)s[1], (int)s[2]));
-        pair<int, int> p3 = hex_to_coord(make_pair((int)s[4], (int)s[5]));
+        pair<int, int> p2 = hex_to_coord(make_pair(stoi(s.substr(2, 3)), stoi(s.substr(4, 5))));
+        pair<int, int> p3 = hex_to_coord(make_pair(stoi(s.substr(8, 9)), stoi(s.substr(10, 11))));
         decltype(newstate.board_map)::mapped_type ring;
         decltype(newstate.board_map)::mapped_type marker;
         decltype(newstate.white_rings) &rings = newstate.white_rings;
@@ -634,9 +634,9 @@ void Board::input_parse(string s, const Player &player) {
         if (s.length() > 11) {
             int k = 13;
             while (s[k] != '\0') {
-                pair<int, int> p4 = hex_to_coord(make_pair((int)s[k + 2], (int)s[k + 3]));
-                pair<int, int> p5 = hex_to_coord(make_pair((int)s[k + 6], (int)s[k + 7]));
-                pair<int, int> p6 = hex_to_coord(make_pair((int)s[k + 9], (int)s[k + 10]));
+                pair<int, int> p4 = hex_to_coord(make_pair(stoi(s.substr(k + 2, k + 3)), stoi(s.substr(k + 4, k + 5))));
+                pair<int, int> p5 = hex_to_coord(make_pair(stoi(s.substr(k + 9, k + 10)), stoi(s.substr(k + 11, k + 12))));
+                pair<int, int> p6 = hex_to_coord(make_pair(stoi(s.substr(k + 15, k + 16)), stoi(s.substr(k + 17, k + 18))));
                 if (p4.first == p5.first) {
                     if (p5.second > p4.second) {
                         for (int i = p4.second; i <= p5.second; i++) {
@@ -676,7 +676,7 @@ void Board::input_parse(string s, const Player &player) {
                 }
                 newstate.board_map[p6] = EMPTY;
                 delete_from_set(rings, p6);
-                k = k + 21;
+                k = k + 20;
             }
         }
     }
@@ -1183,10 +1183,6 @@ bool Isterminal(const State &state) {
     return false;
 }
 
-<<<<<<< HEAD
-string output_parse(const Proper_Ply &proper_ply_tooutput)
-{
-=======
 bool Board::is_game_over() const {
     if (state.mode != P) {
         return state.black_rings.size() == 3 || state.white_rings.size() == 3;
@@ -1195,7 +1191,6 @@ bool Board::is_game_over() const {
 }
 
 string output_parse(const Proper_Ply &proper_ply_tooutput) {
->>>>>>> 9876b9012e7de5cb5d530b0d25a13087a6ae6cfa
     string s;
 
     if (get<1>(proper_ply_tooutput) == make_pair(10, 10)) {
