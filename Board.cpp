@@ -16,94 +16,94 @@ Board::Board() {
     // hex 0
     bm.insert(make_pair(0, 0), make_pair(0, 0));
     // hex 1
-    bm.insert(make_pair(0, 0), make_pair(0, 1));
-    bm.insert(make_pair(0, 0), make_pair(1, 1));
-    bm.insert(make_pair(0, 0), make_pair(1, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, -1));
-    bm.insert(make_pair(0, 0), make_pair(-1, -1));
-    bm.insert(make_pair(0, 0), make_pair(-1, 0));
+    bm.insert(make_pair(1, 0), make_pair(0, 1));
+    bm.insert(make_pair(1, 1), make_pair(1, 1));
+    bm.insert(make_pair(1, 2), make_pair(1, 0));
+    bm.insert(make_pair(1, 3), make_pair(0, -1));
+    bm.insert(make_pair(1, 4), make_pair(-1, -1));
+    bm.insert(make_pair(1, 5), make_pair(-1, 0));
     // hex 2
-    bm.insert(make_pair(0, 0), make_pair(0, 2));
-    bm.insert(make_pair(0, 0), make_pair(1, 2));
-    bm.insert(make_pair(0, 0), make_pair(2, 2));
-    bm.insert(make_pair(0, 0), make_pair(2, 1));
-    bm.insert(make_pair(0, 0), make_pair(2, 0));
-    bm.insert(make_pair(0, 0), make_pair(1, -1));
-    bm.insert(make_pair(0, 0), make_pair(0, -2));
-    bm.insert(make_pair(0, 0), make_pair(-1, -2));
-    bm.insert(make_pair(0, 0), make_pair(-2, -2));
-    bm.insert(make_pair(0, 0), make_pair(-2, -1));
-    bm.insert(make_pair(0, 0), make_pair(-2, 0));
-    bm.insert(make_pair(0, 0), make_pair(-1, 1));
+    bm.insert(make_pair(2, 0), make_pair(0, 2));
+    bm.insert(make_pair(2, 1), make_pair(1, 2));
+    bm.insert(make_pair(2, 2), make_pair(2, 2));
+    bm.insert(make_pair(2, 3), make_pair(2, 1));
+    bm.insert(make_pair(2, 4), make_pair(2, 0));
+    bm.insert(make_pair(2, 5), make_pair(1, -1));
+    bm.insert(make_pair(2, 6), make_pair(0, -2));
+    bm.insert(make_pair(2, 7), make_pair(-1, -2));
+    bm.insert(make_pair(2, 8), make_pair(-2, -2));
+    bm.insert(make_pair(2, 9), make_pair(-2, -1));
+    bm.insert(make_pair(2, 10), make_pair(-2, 0));
+    bm.insert(make_pair(2, 11), make_pair(-1, 1));
     // hex 3
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(3, 0), make_pair(0, 3));
+    bm.insert(make_pair(3, 1), make_pair(1, 3));
+    bm.insert(make_pair(3, 2), make_pair(2, 3));
+    bm.insert(make_pair(3, 3), make_pair(3, 3));
+    bm.insert(make_pair(3, 4), make_pair(3, 2));
+    bm.insert(make_pair(3, 5), make_pair(3, 1));
+    bm.insert(make_pair(3, 6), make_pair(3, 0));
+    bm.insert(make_pair(3, 7), make_pair(2, -1));
+    bm.insert(make_pair(3, 8), make_pair(1, -2));
+    bm.insert(make_pair(3, 9), make_pair(0, -3));
+    bm.insert(make_pair(3, 10), make_pair(-1, -3));
+    bm.insert(make_pair(3, 11), make_pair(-2, -3));
+    bm.insert(make_pair(3, 12), make_pair(-3, -3));
+    bm.insert(make_pair(3, 13), make_pair(-3, -2));
+    bm.insert(make_pair(3, 14), make_pair(-3, -1));
+    bm.insert(make_pair(3, 15), make_pair(-3, 0));
+    bm.insert(make_pair(3, 16), make_pair(-2, 1));
+    bm.insert(make_pair(3, 17), make_pair(-1, 2));
     // hex 4
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(4, 0), make_pair(0, 4));
+    bm.insert(make_pair(4, 1), make_pair(1, 4));
+    bm.insert(make_pair(4, 2), make_pair(2, 4));
+    bm.insert(make_pair(4, 3), make_pair(3, 4));
+    bm.insert(make_pair(4, 4), make_pair(4, 4));
+    bm.insert(make_pair(4, 5), make_pair(4, 3));
+    bm.insert(make_pair(4, 6), make_pair(4, 2));
+    bm.insert(make_pair(4, 7), make_pair(4, 1));
+    bm.insert(make_pair(4, 8), make_pair(4, 0));
+    bm.insert(make_pair(4, 9), make_pair(3, -1));
+    bm.insert(make_pair(4, 10), make_pair(2, -2));
+    bm.insert(make_pair(4, 11), make_pair(1, -3));
+    bm.insert(make_pair(4, 12), make_pair(0, -4));
+    bm.insert(make_pair(4, 13), make_pair(-1, -4));
+    bm.insert(make_pair(4, 14), make_pair(-2, -4));
+    bm.insert(make_pair(4, 15), make_pair(-3, -4));
+    bm.insert(make_pair(4, 16), make_pair(-4, -4));
+    bm.insert(make_pair(4, 17), make_pair(-4, -3));
+    bm.insert(make_pair(4, 18), make_pair(-4, -2));
+    bm.insert(make_pair(4, 19), make_pair(-4, -1));
+    bm.insert(make_pair(4, 20), make_pair(-4, 0));
+    bm.insert(make_pair(4, 21), make_pair(-3, 1));
+    bm.insert(make_pair(4, 22), make_pair(-2, 2));
+    bm.insert(make_pair(4, 23), make_pair(-1, 3));
     // hex 5
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(make_pair(5, 1), make_pair(1, 5));
+    bm.insert(make_pair(5, 2), make_pair(2, 5));
+    bm.insert(make_pair(5, 3), make_pair(3, 5));
+    bm.insert(make_pair(5, 4), make_pair(4, 5));
+    bm.insert(make_pair(5, 6), make_pair(5, 4));
+    bm.insert(make_pair(5, 7), make_pair(5, 3));
+    bm.insert(make_pair(5, 8), make_pair(5, 2));
+    bm.insert(make_pair(5, 9), make_pair(5, 1));
+    bm.insert(make_pair(5, 11), make_pair(4, -1));
+    bm.insert(make_pair(5, 12), make_pair(3, -2));
+    bm.insert(make_pair(5, 13), make_pair(2, -3));
+    bm.insert(make_pair(5, 14), make_pair(1, -4));
+    bm.insert(make_pair(5, 16), make_pair(-1, -5));
+    bm.insert(make_pair(5, 17), make_pair(-2, -5));
+    bm.insert(make_pair(5, 18), make_pair(-3, -5));
+    bm.insert(make_pair(5, 19), make_pair(-4, -5));
+    bm.insert(make_pair(5, 21), make_pair(-5, -4));
+    bm.insert(make_pair(5, 22), make_pair(-5, -3));
+    bm.insert(make_pair(5, 23), make_pair(-5, -2));
+    bm.insert(make_pair(5, 24), make_pair(-5, -1));
+    bm.insert(make_pair(5, 26), make_pair(-4, 1));
+    bm.insert(make_pair(5, 27), make_pair(-3, 2));
+    bm.insert(make_pair(5, 28), make_pair(-2, 3));
+    bm.insert(make_pair(5, 29), make_pair(-1, 4));
 };
 
 double evaluation(const State &state) {
@@ -517,9 +517,12 @@ double alphabeta(const State &state, double alpha, double beta, int depth, Playe
     return return_value;
 }
 
-pair<int, int> convert_to_our(pair<int, int> p) {
+pair<int, int> Board::hex_to_coord(pair<int, int> p) {
+    return bm.left[p];
+}
 
-    return p;
+pair<int, int> Board::coord_to_hex(pair<int, int> p) {
+    return bm.right[p];
 }
 
 State Board::input_parse(string s, const State &state, const Player &player) {
@@ -531,7 +534,7 @@ State Board::input_parse(string s, const State &state, const Player &player) {
             s.erase(search);
     };
     if (s[0] == 'P') {
-        pair<int, int> p1 = convert_to_our(make_pair((int)s[1], (int)s[2]));
+        pair<int, int> p1 = hex_to_coord(make_pair((int)s[1], (int)s[2]));
         if (player == WHITE) {
             newstate.board_map[p1] = WHITE_RING;
             newstate.white_rings.insert(p1);
@@ -540,8 +543,8 @@ State Board::input_parse(string s, const State &state, const Player &player) {
             newstate.black_rings.insert(p1);
         }
     } else if (s[0] == 'S') {
-        pair<int, int> p2 = convert_to_our(make_pair((int)s[1], (int)s[2]));
-        pair<int, int> p3 = convert_to_our(make_pair((int)s[4], (int)s[5]));
+        pair<int, int> p2 = hex_to_coord(make_pair((int)s[1], (int)s[2]));
+        pair<int, int> p3 = hex_to_coord(make_pair((int)s[4], (int)s[5]));
         decltype(newstate.board_map)::mapped_type ring;
         decltype(newstate.board_map)::mapped_type marker;
         decltype(newstate.white_rings) &rings = newstate.white_rings;
@@ -576,9 +579,9 @@ State Board::input_parse(string s, const State &state, const Player &player) {
         if (s.length() > 6) {
             int k = 6;
             while (s[k] != '\0') {
-                pair<int, int> p4 = convert_to_our(make_pair((int)s[k + 2], (int)s[k + 3]));
-                pair<int, int> p5 = convert_to_our(make_pair((int)s[k + 6], (int)s[k + 7]));
-                pair<int, int> p6 = convert_to_our(make_pair((int)s[k + 9], (int)s[k + 10]));
+                pair<int, int> p4 = hex_to_coord(make_pair((int)s[k + 2], (int)s[k + 3]));
+                pair<int, int> p5 = hex_to_coord(make_pair((int)s[k + 6], (int)s[k + 7]));
+                pair<int, int> p6 = hex_to_coord(make_pair((int)s[k + 9], (int)s[k + 10]));
                 if (p4.first == p5.first) {
                     if (p5.second > p4.second) {
                         for (int i = p4.second; i <= p5.second; i++) {
