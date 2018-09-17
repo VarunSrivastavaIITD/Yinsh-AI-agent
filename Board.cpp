@@ -495,7 +495,7 @@ double alphabeta(State &state, double alpha, double beta, int depth, Player play
         auto returned_alpha = numeric_limits<double>::min();
         for (const auto &proper_ply : plies) {
 
-            const auto nextstate = perform_proper_ply(state, player, proper_ply);
+            auto nextstate = perform_proper_ply(state, player, proper_ply);
             returned_alpha = max(returned_alpha, alphabeta(nextstate, alpha, beta, depth - 1, BLACK));
             if (returned_alpha >= beta)
                 return returned_alpha;
@@ -507,7 +507,7 @@ double alphabeta(State &state, double alpha, double beta, int depth, Player play
     else {
         auto returned_beta = numeric_limits<double>::max();
         for (const auto &proper_ply : plies) {
-            const auto nextstate = perform_proper_ply(state, player, proper_ply);
+            auto nextstate = perform_proper_ply(state, player, proper_ply);
             returned_beta = min(returned_beta, alphabeta(nextstate, alpha, beta, depth - 1, WHITE));
             if (alpha >= returned_beta)
                 return returned_beta;
@@ -986,7 +986,7 @@ State checkfor5(const State &state, const Player &player) {
             get<0>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
             if (!(markers_left + markers_right + 1 < 5)) {
                 for (int i = left_most.second + 0; i <= left_most.second + 0 + 4; i++) {
-                    cout << "hey1";
+                    //cout << "hey1";
                     bmap[make_pair(left_most.first, i)] = EMPTY;
                     delete_from_set(markers, make_pair(left_most.first, i));
                 }
@@ -1024,8 +1024,8 @@ State checkfor5(const State &state, const Player &player) {
             get<1>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
             if (!(markers_left + markers_right + 1 < 5)) {
                 for (int i = left_most.first + 0; i <= left_most.first + 0 + 4; i++) {
-                    cout << "hey2";
-                    cout << left_most.second << " " << left_most.first;
+                    //cout << "hey2";
+                    //cout << left_most.second << " " << left_most.first;
                     bmap[make_pair(i, left_most.second)] = EMPTY;
                     delete_from_set(markers, make_pair(i, left_most.second));
                     //proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second), make_pair(left_most.first + 4 + d, left_most.second), coordinate2);
@@ -1060,7 +1060,7 @@ State checkfor5(const State &state, const Player &player) {
             get<2>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
             if (!(markers_left + markers_right + 1 < 5)) {
                 for (int i = left_most.first + 0, j = left_most.second + 0; i <= left_most.first + 0 + 4; i++, j++) {
-                    cout << "hey3";
+                    //cout << "hey3";
                     bmap[make_pair(i, j)] = EMPTY;
                     delete_from_set(markers, make_pair(i, j));
                 }
