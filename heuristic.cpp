@@ -13,10 +13,11 @@
 #include <vector>
 
 const int NUM_RINGS = 5;
-typedef long Heuristic(const State &state, const Player &player);
 
 long value_heuristic(const State &state, const Player &player) {
     auto rings = state.get_player_rings(player);
+    if (state.mode == P)
+        return 0;
     return 10000 * static_cast<long>(NUM_RINGS - rings.size());
 }
 
@@ -25,7 +26,7 @@ long marker_heuristic(const State &state, const Player &player) {
     return 10 * static_cast<long>(markers.size());
 }
 
-long ring_moves_heuristic(const State &state, const Player &player) {
+long ring_moves_heuristic(State &state, const Player &player) {
 
     auto add_ply = [](decltype(State::board_map) &bmap, const pair<int, int> p, long &count) -> bool {
         switch (bmap[p]) {
@@ -38,6 +39,7 @@ long ring_moves_heuristic(const State &state, const Player &player) {
         case WHITE_MARKER:
         case BLACK_MARKER:
             return false;
+            break;
         }
         return false;
     };
@@ -46,32 +48,32 @@ long ring_moves_heuristic(const State &state, const Player &player) {
     auto rings = state.get_player_rings(player);
     long count = 0;
     for (const auto &coordinate : rings) {
-        for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
+        for (auto y = coordinate.second + 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
             if (add_ply(bmap, make_pair(coordinate.first, y), count))
                 break;
         }
 
-        for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
+        for (auto y = coordinate.second - 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
             if (add_ply(bmap, make_pair(coordinate.first, y), count))
                 break;
         }
 
-        for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
+        for (auto x = coordinate.first + 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
             if (add_ply(bmap, make_pair(x, coordinate.second), count))
                 break;
         }
 
-        for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
+        for (auto x = coordinate.first - 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
             if (add_ply(bmap, make_pair(x, coordinate.second), count))
                 break;
         }
 
-        for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
+        for (auto x = coordinate.first + 1, y = coordinate.second + 1; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
             if (add_ply(bmap, make_pair(x, y), count))
                 break;
         }
 
-        for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
+        for (auto x = coordinate.first - 1, y = coordinate.second - 1; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
             if (add_ply(bmap, make_pair(x, y), count))
                 break;
         }
@@ -79,11 +81,7 @@ long ring_moves_heuristic(const State &state, const Player &player) {
     return count;
 }
 
-long ring_connected_heuristic(const State &state, const Player &player) {
-    // auto is_connected = [](const State::Coordinate& p1, const State::Coordinate& p2) -> bool {
-    //     return p1.first == p2.first || p1.second == p2.second || (p1.second - p1.first) == (p2.second - p2.first);
-    // };
-
+long ring_connected_heuristic(State &state, const Player &player) {
     std::vector<State::Coordinate> coords;
     for (const auto &m : state.board_map)
         coords.push_back(m.first);
@@ -96,25 +94,128 @@ long ring_connected_heuristic(const State &state, const Player &player) {
             return r.first == x.first || r.second == x.second || (r.second - r.first) == (x.second - x.first);
         });
 
+    // subtract current position
+    return count - 1;
+}
+
+long ring_controlled_heuristic(State &state, const Player &player) {
+    auto add_ply = [](decltype(State::board_map) &bmap, const pair<int, int> p, long &count) -> bool {
+        switch (bmap[p]) {
+        case EMPTY:
+            break;
+        case WHITE_RING:
+        case BLACK_RING:
+            return true;
+        case WHITE_MARKER:
+        case BLACK_MARKER:
+            ++count;
+            break;
+        }
+        return false;
+    };
+
+    auto bmap = state.board_map;
+    auto rings = state.get_player_rings(player);
+    long count = 0;
+    for (const auto &coordinate : rings) {
+        for (auto y = coordinate.second + 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
+            if (add_ply(bmap, make_pair(coordinate.first, y), count))
+                break;
+        }
+
+        for (auto y = coordinate.second - 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
+            if (add_ply(bmap, make_pair(coordinate.first, y), count))
+                break;
+        }
+
+        for (auto x = coordinate.first + 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
+            if (add_ply(bmap, make_pair(x, coordinate.second), count))
+                break;
+        }
+
+        for (auto x = coordinate.first - 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
+            if (add_ply(bmap, make_pair(x, coordinate.second), count))
+                break;
+        }
+
+        for (auto x = coordinate.first + 1, y = coordinate.second + 1; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
+            if (add_ply(bmap, make_pair(x, y), count))
+                break;
+        }
+
+        for (auto x = coordinate.first - 1, y = coordinate.second - 1; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
+            if (add_ply(bmap, make_pair(x, y), count))
+                break;
+        }
+    }
     return count;
 }
 
-long ring_controlled_heuristic(const State &state, const Player &player) {
-    return 0;
-}
-
-boost::function<long(const State &state, const Player &player)> heuristic_combinator(const vector<long> &weights, const vector<Heuristic> &heuristics) {
-    auto f = [&](const State &state, const Player &player) -> long {
-        long res = 0;
-        for (const auto &tup : boost::combine(weights, heuristics)) {
-            long w;
-            Heuristic h;
-
-            boost::tie(w, h) = tup;
-            res += w * h(state, player);
+long ring_fuse_heuristic(State &state, const Player &player, long w1, long w2) {
+    auto add_ply = [](decltype(State::board_map) &bmap, const pair<int, int> p, long &connect_count, long &control_count) -> bool {
+        switch (bmap[p]) {
+        case EMPTY:
+            ++control_count;
+            break;
+        case WHITE_RING:
+        case BLACK_RING:
+            return true;
+        case WHITE_MARKER:
+        case BLACK_MARKER:
+            ++connect_count;
+            break;
         }
+        return false;
     };
 
-    boost::function<long(const State &state, const Player &player)> return_func = f;
-    return return_func;
+    auto bmap = state.board_map;
+    auto rings = state.get_player_rings(player);
+    long connect_count = 0;
+    long control_count = 0;
+    for (const auto &coordinate : rings) {
+        for (auto y = coordinate.second + 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
+            if (add_ply(bmap, make_pair(coordinate.first, y), connect_count, control_count))
+                break;
+        }
+
+        for (auto y = coordinate.second - 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
+            if (add_ply(bmap, make_pair(coordinate.first, y), connect_count, control_count))
+                break;
+        }
+
+        for (auto x = coordinate.first + 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
+            if (add_ply(bmap, make_pair(x, coordinate.second), connect_count, control_count))
+                break;
+        }
+
+        for (auto x = coordinate.first - 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
+            if (add_ply(bmap, make_pair(x, coordinate.second), connect_count, control_count))
+                break;
+        }
+
+        for (auto x = coordinate.first + 1, y = coordinate.second + 1; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
+            if (add_ply(bmap, make_pair(x, y), connect_count, control_count))
+                break;
+        }
+
+        for (auto x = coordinate.first - 1, y = coordinate.second - 1; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
+            if (add_ply(bmap, make_pair(x, y), connect_count, control_count))
+                break;
+        }
+    }
+    return w1 * connect_count + w2 * control_count;
+}
+
+long ring_heuristic(const std::array<long, 3> &weights, State &state, const Player &player) {
+    long result = 0;
+    std::vector<long (*)(State & state, const Player &player)> heuristics({ring_moves_heuristic, ring_connected_heuristic, ring_controlled_heuristic});
+
+    assert(weights.size() == heuristics.size());
+
+    for (int i = 0; i != weights.size(); ++i) {
+        if (weights[i] != 0)
+            result += weights[i] * heuristics[i](state, player);
+    }
+
+    return result;
 }

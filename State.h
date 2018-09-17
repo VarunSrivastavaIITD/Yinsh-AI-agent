@@ -51,8 +51,6 @@ class State {
     // constructor
     State();
     // coordinate converters
-    static Coordinate hex_to_ycoord(pair<size_t, size_t>);
-    static pair<size_t, size_t> ycoord_to_hex(Coordinate);
     void use_lines() const;
 
     // non const getters
