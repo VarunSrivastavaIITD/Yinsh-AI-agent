@@ -108,10 +108,6 @@ Board::Board() {
     bm.insert(bm_value_type(make_pair(5, 29), make_pair(-1, 4)));
 };
 
-double evaluation(const State &state) {
-    return 0;
-}
-
 Ply Board::bestply() {
 }
 
