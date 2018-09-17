@@ -4,6 +4,7 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+#include <string>
 #include <iostream>
 
 using namespace std;
@@ -48,11 +49,11 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
         auto search = s.find(e);
         if (search != s.end())
             s.erase(search);
-        t.insert(e);
+            t.insert(e);
     };
     if (p2.first == p3.first) {
         if (p3.second > p2.second) {
-            for (int i = p2.second; i <= p3.second; i++) {
+            for (int i = p2.second+1; i <= p3.second; i++) {
                 if (newstate.board_map[make_pair(p2.first, i)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(p2.first, i));
                 } else if (newstate.board_map[make_pair(p2.first, i)] == BLACK_MARKER) {
@@ -62,7 +63,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
         }
 
         else {
-            for (int i = p2.second; i >= p3.second; i--) {
+            for (int i = p2.second-1; i >= p3.second; i--) {
                 if (newstate.board_map[make_pair(p2.first, i)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(p2.first, i));
                 } else if (newstate.board_map[make_pair(p2.first, i)] == BLACK_MARKER) {
@@ -74,7 +75,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
 
     else if (p2.second == p3.second) {
         if (p3.first > p2.first) {
-            for (int i = p2.first; i <= p3.first; i++) {
+            for (int i = p2.first+1; i <= p3.first; i++) {
                 if (newstate.board_map[make_pair(i, p2.second)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(i, p2.second));
                 } else if (newstate.board_map[make_pair(i, p2.second)] == BLACK_MARKER) {
@@ -82,7 +83,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
                 }
             }
         } else {
-            for (int i = p2.first; i >= p3.first; i--) {
+            for (int i = p2.first-1; i >= p3.first; i--) {
                 if (newstate.board_map[make_pair(i, p2.second)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(i, p2.second));
                 } else if (newstate.board_map[make_pair(i, p2.second)] == BLACK_MARKER) {
@@ -92,7 +93,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
         }
     } else {
         if (p3.first > p2.first) {
-            for (int i = p2.first, j = p2.second; i <= p3.first; i++, j++) {
+            for (int i = p2.first+1, j = p2.second+1; i <= p3.first; i++, j++) {
                 if (newstate.board_map[make_pair(i, j)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(i, j));
                 } else if (newstate.board_map[make_pair(i, j)] == BLACK_MARKER) {
@@ -100,7 +101,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
                 }
             }
         } else {
-            for (int i = p2.first, j = p2.second; i >= p3.first; i--, j--) {
+            for (int i = p2.first-1, j = p2.second-1; i >= p3.first; i--, j--) {
                 if (newstate.board_map[make_pair(i, j)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(i, j));
                 } else if (newstate.board_map[make_pair(i, j)] == BLACK_MARKER) {
@@ -443,7 +444,7 @@ State Board::input_parse(string s, const State &state, const Player &player) {
             s.erase(search);
     };
     if (s[0] == 'P') {
-        pair<int, int> p1 = convert_to_our(make_pair((int)s[1], (int)s[2]));
+        pair<int, int> p1 = convert_to_our(make_pair((s[8]-'2'), (s[4]-'0')));
         if (player == WHITE) {
             newstate.board_map[p1] = WHITE_RING;
             newstate.white_rings.insert(p1);
@@ -452,8 +453,9 @@ State Board::input_parse(string s, const State &state, const Player &player) {
             newstate.black_rings.insert(p1);
         }
     } else if (s[0] == 'S') {
-        pair<int, int> p2 = convert_to_our(make_pair((int)s[1], (int)s[2]));
-        pair<int, int> p3 = convert_to_our(make_pair((int)s[4], (int)s[5]));
+        //cout<<(s[8]-'0')<<"**"<<endl;
+        pair<int, int> p2 = convert_to_our(make_pair((s[2]-'0'), (s[4]-'0')));
+        pair<int, int> p3 = convert_to_our(make_pair((s[8]-'0'), (s[10]-'0')));
         decltype(newstate.board_map)::mapped_type ring;
         decltype(newstate.board_map)::mapped_type marker;
         decltype(newstate.white_rings) &rings = newstate.white_rings;
@@ -480,17 +482,19 @@ State Board::input_parse(string s, const State &state, const Player &player) {
         if (search != rings.end())
             rings.erase(search);
 
+        //cout<<"&&"<<p3.first<<" "<<p3.second<<endl;
+        //cout<<"&&"<<newstate.board_map[make_pair(3,  2)]<<endl;
         rings.insert(p3);   //add p3 to rings
         markers.insert(p2); //add p2 to markers
         //toggle & change white&blackmarker, board_map
         newstate = Toggle(p2, p3, newstate);
 
-        if (s.length() > 6) {
-            int k = 6;
+        if (s.length() > 11) {
+            int k = 13;
             while (s[k] != '\0') {
-                pair<int, int> p4 = convert_to_our(make_pair((int)s[k + 2], (int)s[k + 3]));
-                pair<int, int> p5 = convert_to_our(make_pair((int)s[k + 6], (int)s[k + 7]));
-                pair<int, int> p6 = convert_to_our(make_pair((int)s[k + 9], (int)s[k + 10]));
+                pair<int, int> p4 = convert_to_our(make_pair((s[k+2]-'0'), (s[k+4]-'0')));
+                pair<int, int> p5 = convert_to_our(make_pair((s[k+9]-'0'), (s[k+11]-'0')));
+                pair<int, int> p6 = convert_to_our(make_pair((s[k+16]-'0'), (s[k+18]-'0')));
                 if (p4.first == p5.first) {
                     if (p5.second > p4.second) {
                         for (int i = p4.second; i <= p5.second; i++) {
@@ -530,18 +534,21 @@ State Board::input_parse(string s, const State &state, const Player &player) {
                 }
                 newstate.board_map[p6] = EMPTY;
                 delete_from_set(rings, p6);
-                k = k + 13;
+                k = k + 21;
             }
         }
     }
+    //cout<<"&&"<<newstate.board_map[make_pair(5,  4)]<<endl;
+    //cout<<"&&"<<newstate.board_map[make_pair(3,  2)]<<endl;
     return newstate;
 }
 
 vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &state, Player player, vector<Ply> &plies) {
-    State newstate = state;
+    
     vector<Proper_Ply> proper_p;
     for (auto q = plies.begin(); q != plies.end(); q++)
     {
+        State newstate = state;
         //cout<<(*q).first.first<<" "<<(*q).first.second<<endl;
         //cout<<(*q).second.first<<" "<<(*q).second.second<<endl;
         //cout<<endl;
@@ -593,7 +600,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
             if (get<0>(marker_lines[coordinate]) == 1) {
                 markers_left = 0;
                 markers_right = 0;
-                for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
+                for (auto y = coordinate.second+1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
                     if (bmap[make_pair(coordinate.first, y)] != marker)
                         break;
                     else {
@@ -601,8 +608,8 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                         get<0>(marker_lines[make_pair(coordinate.first, y)]) = 0;
                     }
                 }
-
-                for (auto y = coordinate.second; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
+                //cout<<markers_right<<"R ";
+                for (auto y = coordinate.second-1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
                     if (bmap[make_pair(coordinate.first, y)] != marker)
                         break;
                     else {
@@ -611,6 +618,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                         get<0>(marker_lines[make_pair(coordinate.first, y)]) = 0;
                     }
                 }
+                //cout<<markers_left<<"L ";
                 get<0>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
                 if (!(markers_left + markers_right + 1 < 5)) {
                     for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
@@ -629,7 +637,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
             if (get<1>(marker_lines[coordinate]) == 1) {
                 markers_left = 0;
                 markers_right = 0;
-                for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
+                for (auto x = coordinate.first+1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
                     if (bmap[make_pair(x, coordinate.second)] != marker)
                         break;
                     else {
@@ -638,7 +646,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                     }
                 }
 
-                for (auto x = coordinate.first; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
+                for (auto x = coordinate.first-1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
                     if (bmap[make_pair(x, coordinate.second)] != marker)
                         break;
                     else {
@@ -665,7 +673,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
             if (get<2>(marker_lines[coordinate]) == 1) {
                 markers_left = 0;
                 markers_right = 0;
-                for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
+                for (auto x = coordinate.first+1, y = coordinate.second+1; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
                     if (bmap[make_pair(x, coordinate.second)] != marker)
                         break;
                     else {
@@ -674,7 +682,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                     }
                 }
 
-                for (auto x = coordinate.first, y = coordinate.second; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
+                for (auto x = coordinate.first-1, y = coordinate.second-1; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
                     if (bmap[make_pair(x, y)] != marker)
                         break;
                     else {
@@ -701,7 +709,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
             //cout<<flag<<"$$";
             if(flag==3)
             {
-                //cout<<"yay";
+                cout<<"yay";
                 proper_p.emplace_back(p.first, p.second, make_pair(10, 10), make_pair(10, 10), make_pair(10, 10));
             }
         }
@@ -756,6 +764,7 @@ State perform_proper_ply(const State &state, const Player &player, const Proper_
             newstate.mode = S;
         }
     } else if (get<2>(proper_ply_toperform) == make_pair(10, 10)) {
+        cout<<"incorrect";
         newstate.board_map[get<0>(proper_ply_toperform)] = marker;
         newstate.board_map[get<1>(proper_ply_toperform)] = ring;
         auto search = rings.find(get<0>(proper_ply_toperform));
