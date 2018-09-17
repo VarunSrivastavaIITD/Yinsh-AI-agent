@@ -1185,7 +1185,7 @@ bool Isterminal(const State &state) {
 
 bool Board::is_game_over() const {
     if (state.mode != P) {
-        return state.black_rings.size() == 3 || state.white_rings.size() == 3;
+        return state.black_rings.size() == 2 || state.white_rings.size() == 2;
     }
     return false;
 }
