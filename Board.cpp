@@ -1078,3 +1078,12 @@ State checkfor5(const State &state, const Player &player) {
     }
     return newstate;
 }
+
+bool Isterminal(const State &state)
+{
+    if((state.mode==S) && (state.white_rings.size()<3)&&((state.white_rings.size()<3)))
+    {
+        return true;
+    }
+    return false;
+}
