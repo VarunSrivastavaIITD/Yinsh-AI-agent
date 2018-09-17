@@ -122,7 +122,7 @@ Proper_Ply Board::bestply(int depth) {
         other_player = BLACK;
     else
         other_player = WHITE;
-    auto score = numeric_limits<double>::min();
+    auto score = numeric_limits<double>::max();
     for (auto it = plies.begin(); it != plies.end(); ++it) {
         auto child = perform_proper_ply(state, player, *it);
         auto s = -negascout(child, -100, 100, depth - 1, other_player);
