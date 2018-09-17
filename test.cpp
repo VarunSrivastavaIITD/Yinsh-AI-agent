@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
     //cout << "hello"<<endl;
-    Board b;
+    Board b(WHITE);
     b.state.board_map[make_pair(0, 0)] = WHITE_RING;
     b.state.board_map[make_pair(-1, 0)] = BLACK_RING;
     b.state.board_map[make_pair(1, 1)] = WHITE_RING;
@@ -39,7 +39,7 @@ int main() {
     b.state.mode = S;
     b.player = WHITE;
     string str = "S 3 2 M 2 2";
-    //b.state = b.input_parse(str, b.state, b.player);
+    b.input_parse(str, b.player);
     //cout<<b.state.board_map[make_pair(1,  2)]<<"$$$$$"<<endl;
     //cout<<b.state.board_map[make_pair(4,  2)]<<"$$$$$"<<endl;
     //cout<<"@@"<<atoi(str[8])<<endl;
@@ -49,8 +49,9 @@ int main() {
     get<2>(p2) = make_pair(10, 10);
     get<3>(p2) = make_pair(10, 10);
     get<4>(p2) = make_pair(10, 10);
-    State c = checkfor5(b.state, b.player);
-    string s3 = output_parse(Proper_Ply p2);
+    b.checkfor5();
+    string s3 = output_parse(p2);
+    // b.checkfor5();
     //cout<<c.board_map[make_pair(2,  2)]<<"$$$$$"<<endl;
     //cout<<c.board_map[make_pair(4,  4)]<<"$$$$$"<<endl;
     //cout<<c.board_map[make_pair(3,  2)]<<"$$$$$"<<endl;
