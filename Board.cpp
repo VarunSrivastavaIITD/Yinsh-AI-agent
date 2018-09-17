@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "State.h"
+#include "heuristic.h"
 #include <iostream>
 #include <limits>
 #include <string>
@@ -482,9 +483,9 @@ vector<Proper_Ply> generate_plies(const State &state, Player player) {
     return proper_plies;
 }
 
-double alphabeta(const State &state, double alpha, double beta, int depth, Player player) {
+double alphabeta(State &state, double alpha, double beta, int depth, Player player) {
     if (depth == 0) {
-        return evaluation(state);
+        return heuristic(state, player);
     }
 
     auto plies = generate_plies(state, player);
