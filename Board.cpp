@@ -108,10 +108,6 @@ Board::Board() {
     bm.insert(bm_value_type(make_pair(5, 29), make_pair(-1, 4)));
 };
 
-double evaluation(const State &state) {
-    return 0;
-}
-
 Ply Board::bestply() {
 }
 
@@ -517,6 +513,41 @@ double alphabeta(State &state, double alpha, double beta, int depth, Player play
     }
 
     return return_value;
+}
+
+double negascout(State &state, double alpha, double beta, int depth, Player player) {
+    if (depth == 0) {
+        return heuristic(state, player);
+    }
+
+    Player other_player;
+    if (player == WHITE)
+        other_player = BLACK;
+    else
+        other_player = WHITE;
+
+    auto plies = generate_plies(state, player);
+    auto returned_alpha = numeric_limits<double>::min();
+
+    bool first = true;
+    for (const auto &proper_ply : plies) {
+
+        auto nextstate = perform_proper_ply(state, player, proper_ply);
+
+        if (first)
+            returned_alpha = -negascout(nextstate, -beta, -alpha, depth - 1, other_player);
+        else {
+            returned_alpha = -negascout(nextstate, -alpha - 1, -alpha, depth - 1, other_player);
+            if (returned_alpha > alpha && returned_alpha < beta)
+                returned_alpha = -negascout(nextstate, -beta, -returned_alpha, depth - 1, other_player);
+        }
+        first = false;
+        alpha = max(alpha, returned_alpha);
+        if (alpha >= beta)
+            return alpha;
+    }
+
+    return alpha;
 }
 
 pair<int, int> Board::hex_to_coord(pair<int, int> p) {
