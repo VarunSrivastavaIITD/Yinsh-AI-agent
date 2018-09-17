@@ -29,4 +29,5 @@ vector<Proper_Ply> generate_plies(const State &state, Player player);
 State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
 State checkfor5(const State &state, const Player &player);
 State Board::input_parse(string, const State &, const Player &);
+string output_parse(const Proper_Ply &proper_ply_tooutput);
 #endif

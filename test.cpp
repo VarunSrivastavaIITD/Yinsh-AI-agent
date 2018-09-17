@@ -50,6 +50,7 @@ int main() {
     get<3>(p2) = make_pair(10, 10);
     get<4>(p2) = make_pair(10, 10);
     State c = checkfor5(b.state, b.player);
+    string s3 = output_parse(Proper_Ply p2);
     //cout<<c.board_map[make_pair(2,  2)]<<"$$$$$"<<endl;
     //cout<<c.board_map[make_pair(4,  4)]<<"$$$$$"<<endl;
     //cout<<c.board_map[make_pair(3,  2)]<<"$$$$$"<<endl;

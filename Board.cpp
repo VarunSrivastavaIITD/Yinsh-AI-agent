@@ -1121,7 +1121,7 @@ bool Isterminal(const State &state)
     return false;
 }
 
-string outout_parse(const Proper_Ply &proper_ply_tooutput)
+string output_parse(const Proper_Ply &proper_ply_tooutput)
 {
     string s;
 
