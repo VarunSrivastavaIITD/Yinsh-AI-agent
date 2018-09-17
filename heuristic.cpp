@@ -16,6 +16,8 @@ const int NUM_RINGS = 5;
 
 long value_heuristic(const State &state, const Player &player) {
     auto rings = state.get_player_rings(player);
+    if (state.mode == P)
+        return 0;
     return 10000 * static_cast<long>(NUM_RINGS - rings.size());
 }
 
