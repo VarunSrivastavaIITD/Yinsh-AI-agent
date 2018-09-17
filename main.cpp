@@ -26,7 +26,8 @@ int main() {
 
         while (getline(cin, input_move) && (!game_board.is_game_over()) && (seconds < time_limit_in_seconds)) {
             // boost::trim(input_move);
-            game_board.input_parse(input_move, player);
+            game_board.input_parse(input_move, BLACK);
+
             game_board.checkfor5();
             auto ply = game_board.bestply(depth);
             game_board.state = perform_proper_ply(game_board.state, player, ply);
@@ -48,7 +49,7 @@ int main() {
 
         while (getline(cin, input_move) && (!game_board.is_game_over()) && (seconds < time_limit_in_seconds)) {
             //boost::trim(input_move);
-            game_board.input_parse(input_move, player);
+            game_board.input_parse(input_move, BLACK);
             game_board.checkfor5();
             auto ply = game_board.bestply(depth);
             game_board.state = perform_proper_ply(game_board.state, player, ply);

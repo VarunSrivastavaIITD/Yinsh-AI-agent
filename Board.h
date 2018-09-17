@@ -19,7 +19,7 @@ class Board {
 
     Board(Player);
     Proper_Ply bestply(int);
-    void input_parse(string s, const Player &player);
+    void input_parse(string s, Player);
     pair<int, int> hex_to_coord(pair<int, int>);
     pair<int, int> coord_to_hex(pair<int, int>);
     bool is_game_over() const;

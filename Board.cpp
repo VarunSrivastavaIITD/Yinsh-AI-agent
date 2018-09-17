@@ -1,6 +1,7 @@
 #include "Board.h"
 #include "State.h"
 #include "heuristic.h"
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <string>
@@ -18,6 +19,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
 State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
 vector<Proper_Ply> generate_pmode_plies(const State &state);
 double negascout(State &state, double alpha, double beta, int depth, Player player);
+void print_state(const State &);
 
 Board::Board(Player p) {
     player = p;
@@ -122,10 +124,12 @@ Proper_Ply Board::bestply(int depth) {
         other_player = BLACK;
     else
         other_player = WHITE;
-    auto score = numeric_limits<double>::max();
+    auto score = numeric_limits<double>::min();
+
     for (auto it = plies.begin(); it != plies.end(); ++it) {
         auto child = perform_proper_ply(state, player, *it);
         auto s = -negascout(child, -100, 100, depth - 1, other_player);
+
         if (s > score) {
             score = s;
             best_ply = *it;
@@ -578,8 +582,8 @@ pair<int, int> Board::coord_to_hex(pair<int, int> p) {
     return bm.right.at(p);
 }
 
-void Board::input_parse(string s, const Player &player) {
-
+void Board::input_parse(string s, Player player = BLACK) {
+    // player = BLACK;
     State newstate = state;
     auto delete_from_set = [](decltype(newstate.black_markers) &s, const decltype(newstate.black_markers)::value_type &e) {
         auto search = s.find(e);
@@ -600,34 +604,34 @@ void Board::input_parse(string s, const Player &player) {
         pair<int, int> p3 = hex_to_coord(make_pair(stoi(s.substr(8, 9)), stoi(s.substr(10, 11))));
         decltype(newstate.board_map)::mapped_type ring;
         decltype(newstate.board_map)::mapped_type marker;
-        decltype(newstate.white_rings) &rings = newstate.white_rings;
-        decltype(newstate.white_markers) &markers = newstate.white_markers;
-        decltype(newstate.white_markers) &othermarkers = newstate.black_markers;
+        auto rings = std::ref(newstate.white_rings);
+        auto markers = std::ref(newstate.white_markers);
+        auto othermarkers = std::ref(newstate.black_markers);
 
         if (player == WHITE) {
             marker = WHITE_MARKER;
             ring = WHITE_RING;
-            markers = newstate.white_markers;
-            othermarkers = newstate.black_markers;
-            rings = newstate.white_rings;
+            markers = std::ref(newstate.white_markers);
+            othermarkers = std::ref(newstate.black_markers);
+            rings = std::ref(newstate.white_rings);
         } else {
             marker = BLACK_MARKER;
             ring = BLACK_RING;
-            markers = newstate.black_markers;
-            othermarkers = newstate.white_markers;
-            rings = newstate.black_rings;
+            markers = std::ref(newstate.black_markers);
+            othermarkers = std::ref(newstate.white_markers);
+            rings = std::ref(newstate.black_rings);
         }
         newstate.board_map[p2] = marker;
         newstate.board_map[p3] = ring;
 
-        auto search = rings.find(p2);
-        if (search != rings.end())
-            rings.erase(search);
+        auto search = rings.get().find(p2);
+        if (search != rings.get().end())
+            rings.get().erase(search);
 
         //cout<<"&&"<<p3.first<<" "<<p3.second<<endl;
         //cout<<"&&"<<newstate.board_map[make_pair(3,  2)]<<endl;
-        rings.insert(p3);   //add p3 to rings
-        markers.insert(p2); //add p2 to markers
+        rings.get().insert(p3);   //add p3 to rings
+        markers.get().insert(p2); //add p2 to markers
         //toggle & change white&blackmarker, board_map
         newstate = Toggle(p2, p3, newstate);
 
@@ -697,39 +701,39 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
         Ply p = *q;
         decltype(state.board_map)::mapped_type ring;
         decltype(state.board_map)::mapped_type marker;
-        decltype(state.white_rings) &rings = newstate.white_rings;
-        decltype(state.white_rings) &otherrings = newstate.black_rings;
-        decltype(state.white_markers) &markers = newstate.white_markers;
-        decltype(state.white_markers) &othermarkers = newstate.black_markers;
+        auto rings = std::ref(newstate.white_rings);
+        auto otherrings = std::ref(newstate.black_rings);
+        auto markers = std::ref(newstate.white_markers);
+        auto othermarkers = std::ref(newstate.black_markers);
 
         if (player == WHITE) {
             marker = WHITE_MARKER;
             ring = WHITE_RING;
-            markers = newstate.white_markers;
-            othermarkers = newstate.black_markers;
-            rings = newstate.white_rings;
-            otherrings = newstate.black_rings;
+            markers = std::ref(newstate.white_markers);
+            othermarkers = std::ref(newstate.black_markers);
+            rings = std::ref(newstate.white_rings);
+            otherrings = std::ref(newstate.black_rings);
         } else {
             marker = BLACK_MARKER;
             ring = BLACK_RING;
-            markers = newstate.black_markers;
-            othermarkers = newstate.white_markers;
-            rings = newstate.black_rings;
-            otherrings = newstate.white_rings;
+            markers = std::ref(newstate.black_markers);
+            othermarkers = std::ref(newstate.white_markers);
+            rings = std::ref(newstate.black_rings);
+            otherrings = std::ref(newstate.white_rings);
         }
         // implementing ply before converting to properply
         newstate.board_map[p.first] = marker;
         newstate.board_map[p.second] = ring;
-        auto search = rings.find(p.first);
-        if (search != rings.end()) {
-            rings.erase(search);
-            rings.insert(p.second);
+        auto search = rings.get().find(p.first);
+        if (search != rings.get().end()) {
+            rings.get().erase(search);
+            rings.get().insert(p.second);
         }
-        markers.insert(p.first);
+        markers.get().insert(p.first);
         newstate = Toggle(p.first, p.second, newstate);
 
         map<pair<int, int>, tuple<int, int, int>> marker_lines;
-        for (auto i = markers.begin(); i != markers.end(); i++) {
+        for (auto i = markers.get().begin(); i != markers.get().end(); i++) {
             marker_lines[*i] = make_tuple(1, 1, 1);
         }
         auto bmap = newstate.board_map;
@@ -737,7 +741,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
         int markers_right;
         pair<int, int> left_most;
         int flag = 0;
-        for (const auto &coordinate : markers) {
+        for (const auto &coordinate : markers.get()) {
             if (get<0>(marker_lines[coordinate]) == 1) {
                 markers_left = 0;
                 markers_right = 0;
@@ -763,7 +767,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                 get<0>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
                 if (!(markers_left + markers_right + 1 < 5)) {
                     for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                        for (const auto &coordinate2 : rings) {
+                        for (const auto &coordinate2 : rings.get()) {
                             proper_p.emplace_back(p.first, p.second, make_pair(left_most.first, left_most.second + d), make_pair(left_most.first, left_most.second + 4 + d), coordinate2);
                         }
                     }
@@ -797,7 +801,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                 get<1>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
                 if (!(markers_left + markers_right + 1 < 5)) {
                     for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                        for (const auto &coordinate2 : rings) {
+                        for (const auto &coordinate2 : rings.get()) {
                             proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second), make_pair(left_most.first + 4 + d, left_most.second), coordinate2);
                         }
                     }
@@ -831,7 +835,7 @@ vector<Proper_Ply> Generating_proper_moves_from_selection_moves(const State &sta
                 get<2>(marker_lines[make_pair(coordinate.first, coordinate.second)]) = 0;
                 if (!(markers_left + markers_right + 1 < 5)) {
                     for (int d = 0; d <= (markers_left + markers_right + 1 - 5); d++) {
-                        for (const auto &coordinate2 : rings) {
+                        for (const auto &coordinate2 : rings.get()) {
                             proper_p.emplace_back(p.first, p.second, make_pair(left_most.first + d, left_most.second + d), make_pair(left_most.first + 4 + d, left_most.second + 4 + d), coordinate2);
                         }
                     }
@@ -871,30 +875,30 @@ State perform_proper_ply(const State &state, const Player &player, const Proper_
     vector<Proper_Ply> proper_p;
     decltype(state.board_map)::mapped_type ring;
     decltype(state.board_map)::mapped_type marker;
-    decltype(state.white_rings) &rings = newstate.white_rings;
-    decltype(state.white_rings) &otherrings = newstate.black_rings;
-    decltype(state.white_markers) &markers = newstate.white_markers;
-    decltype(state.white_markers) &othermarkers = newstate.black_markers;
+    auto rings = std::ref(newstate.white_rings);
+    auto otherrings = std::ref(newstate.black_rings);
+    auto markers = std::ref(newstate.white_markers);
+    auto othermarkers = std::ref(newstate.black_markers);
 
     if (player == WHITE) {
         marker = WHITE_MARKER;
         ring = WHITE_RING;
-        markers = newstate.white_markers;
-        othermarkers = newstate.black_markers;
-        rings = newstate.white_rings;
-        otherrings = newstate.black_rings;
+        markers = std::ref(newstate.white_markers);
+        othermarkers = std::ref(newstate.black_markers);
+        rings = std::ref(newstate.white_rings);
+        otherrings = std::ref(newstate.black_rings);
     } else {
         marker = BLACK_MARKER;
         ring = BLACK_RING;
-        markers = newstate.black_markers;
-        othermarkers = newstate.white_markers;
-        rings = newstate.black_rings;
-        otherrings = newstate.white_rings;
+        markers = std::ref(newstate.black_markers);
+        othermarkers = std::ref(newstate.white_markers);
+        rings = std::ref(newstate.black_rings);
+        otherrings = std::ref(newstate.white_rings);
     }
     if (get<1>(proper_ply_toperform) == make_pair(10, 10)) {
         newstate.board_map[get<0>(proper_ply_toperform)] = ring;
-        rings.insert(get<0>(proper_ply_toperform));
-        if (rings.size() == Number_of_rings && otherrings.size() == Number_of_rings) {
+        rings.get().insert(get<0>(proper_ply_toperform));
+        if (rings.get().size() == Number_of_rings && otherrings.get().size() == Number_of_rings) {
             newstate.mode = S;
         }
         return newstate;
@@ -902,23 +906,23 @@ State perform_proper_ply(const State &state, const Player &player, const Proper_
         //cout << "incorrect";
         newstate.board_map[get<0>(proper_ply_toperform)] = marker;
         newstate.board_map[get<1>(proper_ply_toperform)] = ring;
-        auto search = rings.find(get<0>(proper_ply_toperform));
-        if (search != rings.end()) {
-            rings.erase(search);
-            rings.insert(get<1>(proper_ply_toperform));
+        auto search = rings.get().find(get<0>(proper_ply_toperform));
+        if (search != rings.get().end()) {
+            rings.get().erase(search);
+            rings.get().insert(get<1>(proper_ply_toperform));
         }
-        markers.insert(get<0>(proper_ply_toperform));
+        markers.get().insert(get<0>(proper_ply_toperform));
         newstate = Toggle(get<0>(proper_ply_toperform), get<1>(proper_ply_toperform), newstate);
         return newstate;
     } else {
         newstate.board_map[get<0>(proper_ply_toperform)] = marker;
         newstate.board_map[get<1>(proper_ply_toperform)] = ring;
-        auto search = rings.find(get<0>(proper_ply_toperform));
-        if (search != rings.end()) {
-            rings.erase(search);
-            rings.insert(get<1>(proper_ply_toperform));
+        auto search = rings.get().find(get<0>(proper_ply_toperform));
+        if (search != rings.get().end()) {
+            rings.get().erase(search);
+            rings.get().insert(get<1>(proper_ply_toperform));
         }
-        markers.insert(get<0>(proper_ply_toperform));
+        markers.get().insert(get<0>(proper_ply_toperform));
         newstate = Toggle(get<0>(proper_ply_toperform), get<1>(proper_ply_toperform), newstate);
 
         pair<int, int> p4 = get<2>(proper_ply_toperform);
@@ -986,36 +990,36 @@ void Board::checkfor5() {
     //proper_plies = Generating_proper_moves_from_selection_moves(state, *q, player, proper_plies);
     decltype(state.board_map)::mapped_type ring;
     decltype(state.board_map)::mapped_type marker;
-    decltype(state.white_rings) &rings = newstate.white_rings;
-    decltype(state.white_rings) &otherrings = newstate.black_rings;
-    decltype(state.white_markers) &markers = newstate.white_markers;
-    decltype(state.white_markers) &othermarkers = newstate.black_markers;
+    auto rings = std::ref(newstate.white_rings);
+    auto otherrings = std::ref(newstate.black_rings);
+    auto markers = std::ref(newstate.white_markers);
+    auto othermarkers = std::ref(newstate.black_markers);
 
     if (player == WHITE) {
         marker = WHITE_MARKER;
         ring = WHITE_RING;
-        markers = newstate.white_markers;
-        othermarkers = newstate.black_markers;
-        rings = newstate.white_rings;
-        otherrings = newstate.black_rings;
+        markers = std::ref(newstate.white_markers);
+        othermarkers = std::ref(newstate.black_markers);
+        rings = std::ref(newstate.white_rings);
+        otherrings = std::ref(newstate.black_rings);
     } else {
         marker = BLACK_MARKER;
         ring = BLACK_RING;
-        markers = newstate.black_markers;
-        othermarkers = newstate.white_markers;
-        rings = newstate.black_rings;
-        otherrings = newstate.white_rings;
+        markers = std::ref(newstate.black_markers);
+        othermarkers = std::ref(newstate.white_markers);
+        rings = std::ref(newstate.black_rings);
+        otherrings = std::ref(newstate.white_rings);
     }
     map<pair<int, int>, tuple<int, int, int>> marker_lines;
-    for (auto i = markers.begin(); i != markers.end(); i++) {
+    for (auto i = markers.get().begin(); i != markers.get().end(); i++) {
         marker_lines[*i] = make_tuple(1, 1, 1);
     }
     auto &bmap = newstate.board_map;
     int markers_left;
     int markers_right;
     pair<int, int> left_most;
-    for (const auto &coordinate : markers) {
-        if (markers.size() == 0)
+    for (const auto &coordinate : markers.get()) {
+        if (markers.get().size() == 0)
             break;
         if (get<0>(marker_lines[coordinate]) == 1) {
             markers_left = 0;
@@ -1053,7 +1057,7 @@ void Board::checkfor5() {
                 }*/
                 long count = 0;
                 State::Coordinate ring;
-                for (const auto &r : rings) {
+                for (const auto &r : rings.get()) {
                     auto res = std::count_if(coords.begin(), coords.end(), [&r](const State::Coordinate &x) {
                         return r.first == x.first || r.second == x.second || (r.second - r.first) == (x.second - x.first);
                     });
@@ -1102,7 +1106,7 @@ void Board::checkfor5() {
 
                 long count = 0;
                 State::Coordinate ring;
-                for (const auto &r : rings) {
+                for (const auto &r : rings.get()) {
                     auto res = std::count_if(coords.begin(), coords.end(), [&r](const State::Coordinate &x) {
                         return r.first == x.first || r.second == x.second || (r.second - r.first) == (x.second - x.first);
                     });
@@ -1156,7 +1160,7 @@ void Board::checkfor5() {
                 }*/
                 long count = 0;
                 State::Coordinate ring;
-                for (const auto &r : rings) {
+                for (const auto &r : rings.get()) {
                     auto res = std::count_if(coords.begin(), coords.end(), [&r](const State::Coordinate &x) {
                         return r.first == x.first || r.second == x.second || (r.second - r.first) == (x.second - x.first);
                     });
@@ -1234,4 +1238,21 @@ string output_parse(const Proper_Ply &proper_ply_tooutput) {
         return s;
     }
     return s;
+}
+
+void print_state(const State &state) {
+    for (auto w : state.white_rings)
+        cout << "White Rings" << w.first << " " << w.second << endl;
+    cout << "-----------------------------------------------" << endl;
+
+    for (auto w : state.black_rings)
+        cout << "Black Rings" << w.first << " " << w.second << endl;
+    cout << "-----------------------------------------------" << endl;
+
+    for (auto w : state.white_markers)
+        cout << "White Markers" << w.first << " " << w.second << endl;
+
+    cout << "-----------------------------------------------" << endl;
+    for (auto w : state.black_markers)
+        cout << "Black Markers" << w.first << " " << w.second << endl;
 }
