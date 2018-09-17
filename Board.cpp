@@ -14,96 +14,96 @@ auto const K = 5;
 
 Board::Board() {
     // hex 0
-    bm.insert(make_pair(0, 0), make_pair(0, 0));
+    bm.insert(bm_value_type(make_pair(0, 0), make_pair(0, 0)));
     // hex 1
-    bm.insert(make_pair(1, 0), make_pair(0, 1));
-    bm.insert(make_pair(1, 1), make_pair(1, 1));
-    bm.insert(make_pair(1, 2), make_pair(1, 0));
-    bm.insert(make_pair(1, 3), make_pair(0, -1));
-    bm.insert(make_pair(1, 4), make_pair(-1, -1));
-    bm.insert(make_pair(1, 5), make_pair(-1, 0));
+    bm.insert(bm_value_type(make_pair(1, 0), make_pair(0, 1)));
+    bm.insert(bm_value_type(make_pair(1, 1), make_pair(1, 1)));
+    bm.insert(bm_value_type(make_pair(1, 2), make_pair(1, 0)));
+    bm.insert(bm_value_type(make_pair(1, 3), make_pair(0, -1)));
+    bm.insert(bm_value_type(make_pair(1, 4), make_pair(-1, -1)));
+    bm.insert(bm_value_type(make_pair(1, 5), make_pair(-1, 0)));
     // hex 2
-    bm.insert(make_pair(2, 0), make_pair(0, 2));
-    bm.insert(make_pair(2, 1), make_pair(1, 2));
-    bm.insert(make_pair(2, 2), make_pair(2, 2));
-    bm.insert(make_pair(2, 3), make_pair(2, 1));
-    bm.insert(make_pair(2, 4), make_pair(2, 0));
-    bm.insert(make_pair(2, 5), make_pair(1, -1));
-    bm.insert(make_pair(2, 6), make_pair(0, -2));
-    bm.insert(make_pair(2, 7), make_pair(-1, -2));
-    bm.insert(make_pair(2, 8), make_pair(-2, -2));
-    bm.insert(make_pair(2, 9), make_pair(-2, -1));
-    bm.insert(make_pair(2, 10), make_pair(-2, 0));
-    bm.insert(make_pair(2, 11), make_pair(-1, 1));
+    bm.insert(bm_value_type(make_pair(2, 0), make_pair(0, 2)));
+    bm.insert(bm_value_type(make_pair(2, 1), make_pair(1, 2)));
+    bm.insert(bm_value_type(make_pair(2, 2), make_pair(2, 2)));
+    bm.insert(bm_value_type(make_pair(2, 3), make_pair(2, 1)));
+    bm.insert(bm_value_type(make_pair(2, 4), make_pair(2, 0)));
+    bm.insert(bm_value_type(make_pair(2, 5), make_pair(1, -1)));
+    bm.insert(bm_value_type(make_pair(2, 6), make_pair(0, -2)));
+    bm.insert(bm_value_type(make_pair(2, 7), make_pair(-1, -2)));
+    bm.insert(bm_value_type(make_pair(2, 8), make_pair(-2, -2)));
+    bm.insert(bm_value_type(make_pair(2, 9), make_pair(-2, -1)));
+    bm.insert(bm_value_type(make_pair(2, 10), make_pair(-2, 0)));
+    bm.insert(bm_value_type(make_pair(2, 11), make_pair(-1, 1)));
     // hex 3
-    bm.insert(make_pair(3, 0), make_pair(0, 3));
-    bm.insert(make_pair(3, 1), make_pair(1, 3));
-    bm.insert(make_pair(3, 2), make_pair(2, 3));
-    bm.insert(make_pair(3, 3), make_pair(3, 3));
-    bm.insert(make_pair(3, 4), make_pair(3, 2));
-    bm.insert(make_pair(3, 5), make_pair(3, 1));
-    bm.insert(make_pair(3, 6), make_pair(3, 0));
-    bm.insert(make_pair(3, 7), make_pair(2, -1));
-    bm.insert(make_pair(3, 8), make_pair(1, -2));
-    bm.insert(make_pair(3, 9), make_pair(0, -3));
-    bm.insert(make_pair(3, 10), make_pair(-1, -3));
-    bm.insert(make_pair(3, 11), make_pair(-2, -3));
-    bm.insert(make_pair(3, 12), make_pair(-3, -3));
-    bm.insert(make_pair(3, 13), make_pair(-3, -2));
-    bm.insert(make_pair(3, 14), make_pair(-3, -1));
-    bm.insert(make_pair(3, 15), make_pair(-3, 0));
-    bm.insert(make_pair(3, 16), make_pair(-2, 1));
-    bm.insert(make_pair(3, 17), make_pair(-1, 2));
+    bm.insert(bm_value_type(make_pair(3, 0), make_pair(0, 3)));
+    bm.insert(bm_value_type(make_pair(3, 1), make_pair(1, 3)));
+    bm.insert(bm_value_type(make_pair(3, 2), make_pair(2, 3)));
+    bm.insert(bm_value_type(make_pair(3, 3), make_pair(3, 3)));
+    bm.insert(bm_value_type(make_pair(3, 4), make_pair(3, 2)));
+    bm.insert(bm_value_type(make_pair(3, 5), make_pair(3, 1)));
+    bm.insert(bm_value_type(make_pair(3, 6), make_pair(3, 0)));
+    bm.insert(bm_value_type(make_pair(3, 7), make_pair(2, -1)));
+    bm.insert(bm_value_type(make_pair(3, 8), make_pair(1, -2)));
+    bm.insert(bm_value_type(make_pair(3, 9), make_pair(0, -3)));
+    bm.insert(bm_value_type(make_pair(3, 10), make_pair(-1, -3)));
+    bm.insert(bm_value_type(make_pair(3, 11), make_pair(-2, -3)));
+    bm.insert(bm_value_type(make_pair(3, 12), make_pair(-3, -3)));
+    bm.insert(bm_value_type(make_pair(3, 13), make_pair(-3, -2)));
+    bm.insert(bm_value_type(make_pair(3, 14), make_pair(-3, -1)));
+    bm.insert(bm_value_type(make_pair(3, 15), make_pair(-3, 0)));
+    bm.insert(bm_value_type(make_pair(3, 16), make_pair(-2, 1)));
+    bm.insert(bm_value_type(make_pair(3, 17), make_pair(-1, 2)));
     // hex 4
-    bm.insert(make_pair(4, 0), make_pair(0, 4));
-    bm.insert(make_pair(4, 1), make_pair(1, 4));
-    bm.insert(make_pair(4, 2), make_pair(2, 4));
-    bm.insert(make_pair(4, 3), make_pair(3, 4));
-    bm.insert(make_pair(4, 4), make_pair(4, 4));
-    bm.insert(make_pair(4, 5), make_pair(4, 3));
-    bm.insert(make_pair(4, 6), make_pair(4, 2));
-    bm.insert(make_pair(4, 7), make_pair(4, 1));
-    bm.insert(make_pair(4, 8), make_pair(4, 0));
-    bm.insert(make_pair(4, 9), make_pair(3, -1));
-    bm.insert(make_pair(4, 10), make_pair(2, -2));
-    bm.insert(make_pair(4, 11), make_pair(1, -3));
-    bm.insert(make_pair(4, 12), make_pair(0, -4));
-    bm.insert(make_pair(4, 13), make_pair(-1, -4));
-    bm.insert(make_pair(4, 14), make_pair(-2, -4));
-    bm.insert(make_pair(4, 15), make_pair(-3, -4));
-    bm.insert(make_pair(4, 16), make_pair(-4, -4));
-    bm.insert(make_pair(4, 17), make_pair(-4, -3));
-    bm.insert(make_pair(4, 18), make_pair(-4, -2));
-    bm.insert(make_pair(4, 19), make_pair(-4, -1));
-    bm.insert(make_pair(4, 20), make_pair(-4, 0));
-    bm.insert(make_pair(4, 21), make_pair(-3, 1));
-    bm.insert(make_pair(4, 22), make_pair(-2, 2));
-    bm.insert(make_pair(4, 23), make_pair(-1, 3));
+    bm.insert(bm_value_type(make_pair(4, 0), make_pair(0, 4)));
+    bm.insert(bm_value_type(make_pair(4, 1), make_pair(1, 4)));
+    bm.insert(bm_value_type(make_pair(4, 2), make_pair(2, 4)));
+    bm.insert(bm_value_type(make_pair(4, 3), make_pair(3, 4)));
+    bm.insert(bm_value_type(make_pair(4, 4), make_pair(4, 4)));
+    bm.insert(bm_value_type(make_pair(4, 5), make_pair(4, 3)));
+    bm.insert(bm_value_type(make_pair(4, 6), make_pair(4, 2)));
+    bm.insert(bm_value_type(make_pair(4, 7), make_pair(4, 1)));
+    bm.insert(bm_value_type(make_pair(4, 8), make_pair(4, 0)));
+    bm.insert(bm_value_type(make_pair(4, 9), make_pair(3, -1)));
+    bm.insert(bm_value_type(make_pair(4, 10), make_pair(2, -2)));
+    bm.insert(bm_value_type(make_pair(4, 11), make_pair(1, -3)));
+    bm.insert(bm_value_type(make_pair(4, 12), make_pair(0, -4)));
+    bm.insert(bm_value_type(make_pair(4, 13), make_pair(-1, -4)));
+    bm.insert(bm_value_type(make_pair(4, 14), make_pair(-2, -4)));
+    bm.insert(bm_value_type(make_pair(4, 15), make_pair(-3, -4)));
+    bm.insert(bm_value_type(make_pair(4, 16), make_pair(-4, -4)));
+    bm.insert(bm_value_type(make_pair(4, 17), make_pair(-4, -3)));
+    bm.insert(bm_value_type(make_pair(4, 18), make_pair(-4, -2)));
+    bm.insert(bm_value_type(make_pair(4, 19), make_pair(-4, -1)));
+    bm.insert(bm_value_type(make_pair(4, 20), make_pair(-4, 0)));
+    bm.insert(bm_value_type(make_pair(4, 21), make_pair(-3, 1)));
+    bm.insert(bm_value_type(make_pair(4, 22), make_pair(-2, 2)));
+    bm.insert(bm_value_type(make_pair(4, 23), make_pair(-1, 3)));
     // hex 5
-    bm.insert(make_pair(5, 1), make_pair(1, 5));
-    bm.insert(make_pair(5, 2), make_pair(2, 5));
-    bm.insert(make_pair(5, 3), make_pair(3, 5));
-    bm.insert(make_pair(5, 4), make_pair(4, 5));
-    bm.insert(make_pair(5, 6), make_pair(5, 4));
-    bm.insert(make_pair(5, 7), make_pair(5, 3));
-    bm.insert(make_pair(5, 8), make_pair(5, 2));
-    bm.insert(make_pair(5, 9), make_pair(5, 1));
-    bm.insert(make_pair(5, 11), make_pair(4, -1));
-    bm.insert(make_pair(5, 12), make_pair(3, -2));
-    bm.insert(make_pair(5, 13), make_pair(2, -3));
-    bm.insert(make_pair(5, 14), make_pair(1, -4));
-    bm.insert(make_pair(5, 16), make_pair(-1, -5));
-    bm.insert(make_pair(5, 17), make_pair(-2, -5));
-    bm.insert(make_pair(5, 18), make_pair(-3, -5));
-    bm.insert(make_pair(5, 19), make_pair(-4, -5));
-    bm.insert(make_pair(5, 21), make_pair(-5, -4));
-    bm.insert(make_pair(5, 22), make_pair(-5, -3));
-    bm.insert(make_pair(5, 23), make_pair(-5, -2));
-    bm.insert(make_pair(5, 24), make_pair(-5, -1));
-    bm.insert(make_pair(5, 26), make_pair(-4, 1));
-    bm.insert(make_pair(5, 27), make_pair(-3, 2));
-    bm.insert(make_pair(5, 28), make_pair(-2, 3));
-    bm.insert(make_pair(5, 29), make_pair(-1, 4));
+    bm.insert(bm_value_type(make_pair(5, 1), make_pair(1, 5)));
+    bm.insert(bm_value_type(make_pair(5, 2), make_pair(2, 5)));
+    bm.insert(bm_value_type(make_pair(5, 3), make_pair(3, 5)));
+    bm.insert(bm_value_type(make_pair(5, 4), make_pair(4, 5)));
+    bm.insert(bm_value_type(make_pair(5, 6), make_pair(5, 4)));
+    bm.insert(bm_value_type(make_pair(5, 7), make_pair(5, 3)));
+    bm.insert(bm_value_type(make_pair(5, 8), make_pair(5, 2)));
+    bm.insert(bm_value_type(make_pair(5, 9), make_pair(5, 1)));
+    bm.insert(bm_value_type(make_pair(5, 11), make_pair(4, -1)));
+    bm.insert(bm_value_type(make_pair(5, 12), make_pair(3, -2)));
+    bm.insert(bm_value_type(make_pair(5, 13), make_pair(2, -3)));
+    bm.insert(bm_value_type(make_pair(5, 14), make_pair(1, -4)));
+    bm.insert(bm_value_type(make_pair(5, 16), make_pair(-1, -5)));
+    bm.insert(bm_value_type(make_pair(5, 17), make_pair(-2, -5)));
+    bm.insert(bm_value_type(make_pair(5, 18), make_pair(-3, -5)));
+    bm.insert(bm_value_type(make_pair(5, 19), make_pair(-4, -5)));
+    bm.insert(bm_value_type(make_pair(5, 21), make_pair(-5, -4)));
+    bm.insert(bm_value_type(make_pair(5, 22), make_pair(-5, -3)));
+    bm.insert(bm_value_type(make_pair(5, 23), make_pair(-5, -2)));
+    bm.insert(bm_value_type(make_pair(5, 24), make_pair(-5, -1)));
+    bm.insert(bm_value_type(make_pair(5, 26), make_pair(-4, 1)));
+    bm.insert(bm_value_type(make_pair(5, 27), make_pair(-3, 2)));
+    bm.insert(bm_value_type(make_pair(5, 28), make_pair(-2, 3)));
+    bm.insert(bm_value_type(make_pair(5, 29), make_pair(-1, 4)));
 };
 
 double evaluation(const State &state) {
@@ -518,11 +518,11 @@ double alphabeta(const State &state, double alpha, double beta, int depth, Playe
 }
 
 pair<int, int> Board::hex_to_coord(pair<int, int> p) {
-    return bm.left[p];
+    return bm.left.at(p);
 }
 
 pair<int, int> Board::coord_to_hex(pair<int, int> p) {
-    return bm.right[p];
+    return bm.right.at(p);
 }
 
 State Board::input_parse(string s, const State &state, const Player &player) {

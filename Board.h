@@ -10,7 +10,7 @@ using namespace std;
 class Board {
   private:
     typedef boost::bimap<pair<int, int>, pair<int, int>> bm_type;
-    typedef bm_type::value_type hex_coord;
+    typedef bm_type::value_type bm_value_type;
 
   public:
     State state;
