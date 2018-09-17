@@ -219,3 +219,10 @@ long ring_heuristic(const std::array<long, 3> &weights, State &state, const Play
 
     return result;
 }
+
+long heuristic(State &state, const Player &player) {
+    auto valh = value_heuristic(state, player);
+    auto markerh = marker_heuristic(state, player);
+    auto ringh = 1 * ring_moves_heuristic(state, player) + ring_fuse_heuristic(state, player, 1, 1);
+    return valh + markerh + ringh;
+}
