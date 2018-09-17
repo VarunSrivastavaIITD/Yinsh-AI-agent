@@ -2,21 +2,18 @@
 using namespace std;
 #include "Board.h"
 #include "State.h"
-#include "Board.cpp"
-#include "State.cpp"
-
 
 int main() {
     //cout << "hello"<<endl;
     Board b;
-    b.state.board_map[make_pair(0,  0)] = WHITE_RING;
+    b.state.board_map[make_pair(0, 0)] = WHITE_RING;
     b.state.board_map[make_pair(-1, 0)] = BLACK_RING;
     b.state.board_map[make_pair(1, 1)] = WHITE_RING;
     b.state.board_map[make_pair(0, -1)] = BLACK_RING;
     b.state.board_map[make_pair(1, -1)] = WHITE_RING;
-    b.state.board_map[make_pair(0,  1)] = BLACK_RING;
-    b.state.board_map[make_pair(3,  2)] = WHITE_RING;
-    b.state.board_map[make_pair(1,  0)] = BLACK_RING;
+    b.state.board_map[make_pair(0, 1)] = BLACK_RING;
+    b.state.board_map[make_pair(3, 2)] = WHITE_RING;
+    b.state.board_map[make_pair(1, 0)] = BLACK_RING;
     b.state.board_map[make_pair(2, -1)] = WHITE_RING;
     b.state.board_map[make_pair(-1, 1)] = BLACK_RING;
     b.state.board_map[make_pair(1, 2)] = WHITE_MARKER;

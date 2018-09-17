@@ -20,12 +20,11 @@ class Board {
     Board();
     Ply bestply();
     State input_parse(string s, const State &state, const Player &player);
-    vector<Proper_Ply> generate_plies(const State &state, Player player);
     pair<int, int> hex_to_coord(pair<int, int>);
     pair<int, int> coord_to_hex(pair<int, int>);
     void printboard();
 };
 
 vector<Proper_Ply> generate_plies(const State &state, Player player);
-
+State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
 #endif
