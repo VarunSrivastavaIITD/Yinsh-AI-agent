@@ -3,9 +3,9 @@ TESTNAME = test
 LIBS = -lboost_system
 INCLUDES = -I/usr/local/include
 LDFLAGS = -L./
-OBJECTS = main.o State.o Board.o
-TESTOBJECTS = test.o State.o Board.o
-GAMEFILES = build/Board.o build/State.o
+OBJECTS = main.o heuristic.o State.o Board.o
+TESTOBJECTS = test.o heuristic.o State.o Board.o
+GAMEFILES = build/heuristic.o build/Board.o build/State.o
 CFLAGS = -Wall -Wextra -ggdb3 -std=c++11 -pedantic
 
 all: $(PROGNAME)
