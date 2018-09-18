@@ -2,12 +2,15 @@
 #include "State.h"
 #include <boost/algorithm/string.hpp>
 #include <chrono>
+#include <fstream>
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
 int main() {
+    // ifstream fin("input.txt");
+    auto& fin = cin;
     Player player = WHITE;
     Board game_board(player);
     int player_id, board_size, time_limit_in_seconds;
@@ -16,15 +19,15 @@ int main() {
     auto begin = chrono::high_resolution_clock::now();
     auto current = chrono::high_resolution_clock::now();
 
-    cin >> player_id >> board_size >> time_limit_in_seconds;
-    cin.clear();
-    cin.ignore(1000, '\n');
+    fin >> player_id >> board_size >> time_limit_in_seconds;
+    fin.clear();
+    fin.ignore(1000, '\n');
 
     if (player_id == 2) {
         //other person is moving first
         auto seconds = chrono::duration_cast<chrono::seconds>(current - begin).count();
 
-        while (getline(cin, input_move) && (!game_board.is_game_over()) && (seconds < time_limit_in_seconds)) {
+        while (getline(fin, input_move) && (!game_board.is_game_over()) && (seconds < time_limit_in_seconds)) {
             // boost::trim(input_move);
             game_board.input_parse(input_move, BLACK);
 
@@ -47,7 +50,7 @@ int main() {
         auto output = game_board.output_parse(ply);
         cout << output << endl;
 
-        while (getline(cin, input_move) && (!game_board.is_game_over()) && (seconds < time_limit_in_seconds)) {
+        while (getline(fin, input_move) && (!game_board.is_game_over()) && (seconds < time_limit_in_seconds)) {
             //boost::trim(input_move);
             game_board.input_parse(input_move, BLACK);
             game_board.checkfor5();

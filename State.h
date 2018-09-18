@@ -2,6 +2,8 @@
 #define STATE_H
 
 #include <boost/functional/hash.hpp>
+#include <map>
+#include <set>
 #include <tuple>
 #include <unordered_map>
 #include <unordered_set>
@@ -33,21 +35,26 @@ class State {
     typedef pair<int, int> Coordinate;
     // member variables
     Mode mode;
-    unordered_map<Coordinate, Values, boost::hash<Coordinate>>
-        board_map;
-    unordered_set<Coordinate, boost::hash<Coordinate>> black_rings;
-    unordered_set<Coordinate, boost::hash<Coordinate>> white_rings;
-    unordered_set<Coordinate, boost::hash<Coordinate>> white_markers;
-    unordered_set<Coordinate, boost::hash<Coordinate>> black_markers;
-    unordered_set<
-        unordered_set<Coordinate, boost::hash<Coordinate>>,
-        boost::hash<unordered_set<Coordinate, boost::hash<Coordinate>>>>
-        white_lines;
-    unordered_set<
-        unordered_set<Coordinate, boost::hash<Coordinate>>,
-        boost::hash<unordered_set<Coordinate, boost::hash<Coordinate>>>>
-        black_lines;
+    // unordered_map<Coordinate, Values, boost::hash<Coordinate>>
+    //     board_map;
+    // unordered_set<Coordinate, boost::hash<Coordinate>> black_rings;
+    // unordered_set<Coordinate, boost::hash<Coordinate>> white_rings;
+    // unordered_set<Coordinate, boost::hash<Coordinate>> white_markers;
+    // unordered_set<Coordinate, boost::hash<Coordinate>> black_markers;
+    // unordered_set<
+    //     unordered_set<Coordinate, boost::hash<Coordinate>>,
+    //     boost::hash<unordered_set<Coordinate, boost::hash<Coordinate>>>>
+    //     white_lines;
+    // unordered_set<
+    //     unordered_set<Coordinate, boost::hash<Coordinate>>,
+    //     boost::hash<unordered_set<Coordinate, boost::hash<Coordinate>>>>
+    //     black_lines;
 
+    map<Coordinate, Values> board_map;
+    set<Coordinate> black_rings;
+    set<Coordinate> white_rings;
+    set<Coordinate> white_markers;
+    set<Coordinate> black_markers;
     // constructor
     State();
     // coordinate converters

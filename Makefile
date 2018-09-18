@@ -6,8 +6,8 @@ LDFLAGS = -L./
 OBJECTS = main.o heuristic.o State.o Board.o
 TESTOBJECTS = test.o heuristic.o State.o Board.o
 GAMEFILES = build/heuristic.o build/Board.o build/State.o
-# CFLAGS = -Wall -Wextra -O2 -march=native -std=c++11 -pedantic
-CFLAGS = -Wall -Wextra -ggdb3 -std=c++11 -pedantic
+CFLAGS = -Wall -Wextra -O2 -march=native -std=c++11 -pedantic
+# CFLAGS = -Wall -Wextra -ggdb3 -std=c++11 -pedantic
 
 all: $(PROGNAME)
 test: $(TESTNAME)
