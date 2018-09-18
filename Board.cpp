@@ -169,7 +169,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
     };
     if (p2.first == p3.first) {
         if (p3.second > p2.second) {
-            for (int i = p2.second + 1; i <= p3.second; i++) {
+            for (int i = p2.second + 1; i < p3.second; i++) {
                 if (newstate.board_map[make_pair(p2.first, i)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(p2.first, i));
                 } else if (newstate.board_map[make_pair(p2.first, i)] == BLACK_MARKER) {
@@ -179,7 +179,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
         }
 
         else {
-            for (int i = p2.second - 1; i >= p3.second; i--) {
+            for (int i = p2.second - 1; i > p3.second; i--) {
                 if (newstate.board_map[make_pair(p2.first, i)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(p2.first, i));
                 } else if (newstate.board_map[make_pair(p2.first, i)] == BLACK_MARKER) {
@@ -191,7 +191,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
 
     else if (p2.second == p3.second) {
         if (p3.first > p2.first) {
-            for (int i = p2.first + 1; i <= p3.first; i++) {
+            for (int i = p2.first + 1; i < p3.first; i++) {
                 if (newstate.board_map[make_pair(i, p2.second)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(i, p2.second));
                 } else if (newstate.board_map[make_pair(i, p2.second)] == BLACK_MARKER) {
@@ -199,7 +199,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
                 }
             }
         } else {
-            for (int i = p2.first - 1; i >= p3.first; i--) {
+            for (int i = p2.first - 1; i > p3.first; i--) {
                 if (newstate.board_map[make_pair(i, p2.second)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(i, p2.second));
                 } else if (newstate.board_map[make_pair(i, p2.second)] == BLACK_MARKER) {
@@ -209,7 +209,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
         }
     } else {
         if (p3.first > p2.first) {
-            for (int i = p2.first + 1, j = p2.second + 1; i <= p3.first; i++, j++) {
+            for (int i = p2.first + 1, j = p2.second + 1; i < p3.first; i++, j++) {
                 if (newstate.board_map[make_pair(i, j)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(i, j));
                 } else if (newstate.board_map[make_pair(i, j)] == BLACK_MARKER) {
@@ -217,7 +217,7 @@ State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state) {
                 }
             }
         } else {
-            for (int i = p2.first - 1, j = p2.second - 1; i >= p3.first; i--, j--) {
+            for (int i = p2.first - 1, j = p2.second - 1; i > p3.first; i--, j--) {
                 if (newstate.board_map[make_pair(i, j)] == WHITE_MARKER) {
                     flip(newstate.white_markers, newstate.black_markers, make_pair(i, j));
                 } else if (newstate.board_map[make_pair(i, j)] == BLACK_MARKER) {
