@@ -30,4 +30,5 @@ class Board {
 
 vector<Proper_Ply> generate_plies(const State &state, Player player);
 State perform_proper_ply(const State &state, const Player &player, const Proper_Ply &proper_ply_toperform);
+State Toggle(pair<int, int> p2, pair<int, int> p3, const State &state); 
 #endif
