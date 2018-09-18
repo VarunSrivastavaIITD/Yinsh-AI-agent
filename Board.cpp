@@ -112,7 +112,7 @@ Board::Board(Player p) {
     bm.insert(bm_value_type(make_pair(5, 27), make_pair(-3, 2)));
     bm.insert(bm_value_type(make_pair(5, 28), make_pair(-2, 3)));
     bm.insert(bm_value_type(make_pair(5, 29), make_pair(-1, 4)));
-};
+}
 
 Proper_Ply Board::bestply(int depth) {
     auto plies = generate_plies(state, player);
@@ -1190,8 +1190,14 @@ bool Board::is_game_over() const {
     return false;
 }
 
-string output_parse(const Proper_Ply &proper_ply_tooutput) {
+string Board::output_parse(Proper_Ply &proper_ply_tooutput) {
     string s;
+
+    get<0>(proper_ply_tooutput) = coord_to_hex(get<0>(proper_ply_tooutput));
+    get<1>(proper_ply_tooutput) = coord_to_hex(get<1>(proper_ply_tooutput));
+    get<2>(proper_ply_tooutput) = coord_to_hex(get<2>(proper_ply_tooutput));
+    get<3>(proper_ply_tooutput) = coord_to_hex(get<3>(proper_ply_tooutput));
+    get<4>(proper_ply_tooutput) = coord_to_hex(get<4>(proper_ply_tooutput));
 
     if (get<1>(proper_ply_tooutput) == make_pair(10, 10)) {
         s = "P ";
