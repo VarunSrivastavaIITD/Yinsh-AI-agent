@@ -32,7 +32,7 @@ int main() {
             auto ply = game_board.bestply(depth);
             game_board.state = perform_proper_ply(game_board.state, player, ply);
             // game_board.checkfor5();
-            auto output = output_parse(ply);
+            auto output = game_board.output_parse(ply);
             cout << output << endl;
             ;
 
@@ -44,7 +44,7 @@ int main() {
         auto ply = game_board.bestply(depth);
         game_board.state = perform_proper_ply(game_board.state, player, ply);
         // game_board.checkfor5();
-        auto output = output_parse(ply);
+        auto output = game_board.output_parse(ply);
         cout << output << endl;
 
         while (getline(cin, input_move) && (!game_board.is_game_over()) && (seconds < time_limit_in_seconds)) {
@@ -54,7 +54,7 @@ int main() {
             auto ply = game_board.bestply(depth);
             game_board.state = perform_proper_ply(game_board.state, player, ply);
             // game_board.checkfor5();
-            auto output = output_parse(ply);
+            auto output = game_board.output_parse(ply);
             cout << output << endl;
 
             current = chrono::high_resolution_clock::now();

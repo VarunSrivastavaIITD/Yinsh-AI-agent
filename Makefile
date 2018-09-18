@@ -14,11 +14,11 @@ test: $(TESTNAME)
 
 $(PROGNAME): $(OBJECTS)
 	@mkdir -p bin
-	g++ -o -ggdb3 bin/$(PROGNAME) build/$(PROGNAME).o $(GAMEFILES) $(LIBS) $(INCLUDES) $(LDFLAGS)
+	g++ -o bin/$(PROGNAME) build/$(PROGNAME).o $(GAMEFILES) $(LIBS) $(INCLUDES) $(LDFLAGS)
 
 $(TESTNAME): $(TESTOBJECTS)
 	@mkdir -p bin
-	g++ -o -ggdb3 bin/$(TESTNAME) build/$(TESTNAME).o $(GAMEFILES) $(LIBS) $(INCLUDES) $(LDFLAGS)
+	g++ -o bin/$(TESTNAME) build/$(TESTNAME).o $(GAMEFILES) $(LIBS) $(INCLUDES) $(LDFLAGS)
 
 $(OBJECTS): Makefile
 $(TESTOBJECTS): Makefile
