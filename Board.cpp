@@ -23,6 +23,7 @@ void print_state(const State &);
 
 Board::Board(Player p) {
     player = p;
+    state.mode = P;
     // hex 0
     bm.insert(bm_value_type(make_pair(0, 0), make_pair(0, 0)));
     // hex 1
@@ -1197,11 +1198,16 @@ bool Board::is_game_over() const {
 string Board::output_parse(Proper_Ply &proper_ply_tooutput) {
     string s;
 
-    get<0>(proper_ply_tooutput) = coord_to_hex(get<0>(proper_ply_tooutput));
-    get<1>(proper_ply_tooutput) = coord_to_hex(get<1>(proper_ply_tooutput));
-    get<2>(proper_ply_tooutput) = coord_to_hex(get<2>(proper_ply_tooutput));
-    get<3>(proper_ply_tooutput) = coord_to_hex(get<3>(proper_ply_tooutput));
-    get<4>(proper_ply_tooutput) = coord_to_hex(get<4>(proper_ply_tooutput));
+    if(get<0>(proper_ply_tooutput)!=make_pair(10,10))
+        get<0>(proper_ply_tooutput) = coord_to_hex(get<0>(proper_ply_tooutput));
+    if(get<1>(proper_ply_tooutput)!=make_pair(10,10))
+        get<1>(proper_ply_tooutput) = coord_to_hex(get<1>(proper_ply_tooutput));
+    if(get<2>(proper_ply_tooutput)!=make_pair(10,10))
+        get<2>(proper_ply_tooutput) = coord_to_hex(get<2>(proper_ply_tooutput));
+    if(get<3>(proper_ply_tooutput)!=make_pair(10,10))
+        get<3>(proper_ply_tooutput) = coord_to_hex(get<3>(proper_ply_tooutput));
+    if(get<4>(proper_ply_tooutput)!=make_pair(10,10))
+        get<4>(proper_ply_tooutput) = coord_to_hex(get<4>(proper_ply_tooutput));
 
     if (get<1>(proper_ply_tooutput) == make_pair(10, 10)) {
         s = "P ";
