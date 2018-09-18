@@ -9,7 +9,8 @@
 using namespace std;
 
 int main() {
-    ifstream fin("input.txt");
+    // ifstream fin("input.txt");
+    auto& fin = cin;
     Player player = WHITE;
     Board game_board(player);
     int player_id, board_size, time_limit_in_seconds;
