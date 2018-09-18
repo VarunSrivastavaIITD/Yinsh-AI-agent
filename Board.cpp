@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <limits>
+#include <sstream>
 #include <string>
 #include <tuple>
 #include <utility>
@@ -125,7 +126,7 @@ Proper_Ply Board::bestply(int depth) {
         other_player = BLACK;
     else
         other_player = WHITE;
-    auto score = numeric_limits<double>::min();
+    auto score = numeric_limits<double>::lowest();
 
     for (auto it = plies.begin(); it != plies.end(); ++it) {
         auto child = perform_proper_ply(state, player, *it);
@@ -143,17 +144,23 @@ bool is_connected(pair<int, int> p1, pair<int, int> p2) {
     return p1.first == p2.first || p1.second == p2.second || (p1.second - p1.first) == (p2.second - p2.first);
 }
 
-bool add_ply(decltype(State::board_map) &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate) {
+bool add_ply(decltype(State::board_map) &bmap, const pair<int, int> p, vector<Ply> &vec, const pair<int, int> coordinate, bool &found_marker) {
 
     switch (bmap[p]) {
     case EMPTY:
         vec.emplace_back(coordinate, p);
-        break;
+        if (!found_marker) {
+            return false;
+            break;
+        } else {
+            return true;
+        }
     case WHITE_RING:
     case BLACK_RING:
         return true;
     case WHITE_MARKER:
     case BLACK_MARKER:
+        found_marker = true;
         return false;
     }
     return false;
@@ -460,34 +467,40 @@ vector<Proper_Ply> generate_plies(const State &state, Player player) {
         else
             rings = state.black_rings;
 
+        bool found_marker = false;
         for (const auto &coordinate : rings) {
             for (auto y = coordinate.second + 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); ++y) {
-                if (add_ply(bmap, make_pair(coordinate.first, y), plies, coordinate))
+                if (add_ply(bmap, make_pair(coordinate.first, y), plies, coordinate, found_marker))
                     break;
             }
 
+            found_marker = false;
             for (auto y = coordinate.second - 1; bmap.find(make_pair(coordinate.first, y)) != bmap.end(); --y) {
-                if (add_ply(bmap, make_pair(coordinate.first, y), plies, coordinate))
+                if (add_ply(bmap, make_pair(coordinate.first, y), plies, coordinate, found_marker))
                     break;
             }
+            found_marker = false;
 
             for (auto x = coordinate.first + 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); ++x) {
-                if (add_ply(bmap, make_pair(x, coordinate.second), plies, coordinate))
+                if (add_ply(bmap, make_pair(x, coordinate.second), plies, coordinate, found_marker))
                     break;
             }
+            found_marker = false;
 
             for (auto x = coordinate.first - 1; bmap.find(make_pair(x, coordinate.second)) != bmap.end(); --x) {
-                if (add_ply(bmap, make_pair(x, coordinate.second), plies, coordinate))
+                if (add_ply(bmap, make_pair(x, coordinate.second), plies, coordinate, found_marker))
                     break;
             }
+            found_marker = false;
 
             for (auto x = coordinate.first + 1, y = coordinate.second + 1; bmap.find(make_pair(x, y)) != bmap.end(); ++x, ++y) {
-                if (add_ply(bmap, make_pair(x, y), plies, coordinate))
+                if (add_ply(bmap, make_pair(x, y), plies, coordinate, found_marker))
                     break;
             }
+            found_marker = false;
 
             for (auto x = coordinate.first - 1, y = coordinate.second - 1; bmap.find(make_pair(x, y)) != bmap.end(); --x, --y) {
-                if (add_ply(bmap, make_pair(x, y), plies, coordinate))
+                if (add_ply(bmap, make_pair(x, y), plies, coordinate, found_marker))
                     break;
             }
         }
@@ -513,7 +526,7 @@ double alphabeta(State &state, double alpha, double beta, int depth, Player play
     auto return_value = 0.0;
 
     if (player == WHITE) {
-        auto returned_alpha = numeric_limits<double>::min();
+        auto returned_alpha = numeric_limits<double>::lowest();
         for (const auto &proper_ply : plies) {
 
             auto nextstate = perform_proper_ply(state, player, proper_ply);
@@ -542,7 +555,8 @@ double alphabeta(State &state, double alpha, double beta, int depth, Player play
 
 double negascout(State &state, double alpha, double beta, int depth, Player player) {
     if (depth == 0) {
-        return heuristic(state, player);
+        auto h = heuristic(state, player);
+        return h;
     }
 
     Player other_player;
@@ -552,7 +566,7 @@ double negascout(State &state, double alpha, double beta, int depth, Player play
         other_player = WHITE;
 
     auto plies = generate_plies(state, player);
-    auto returned_alpha = numeric_limits<double>::min();
+    auto returned_alpha = numeric_limits<double>::lowest();
 
     bool first = true;
     for (const auto &proper_ply : plies) {
@@ -585,14 +599,19 @@ pair<int, int> Board::coord_to_hex(pair<int, int> p) {
 
 void Board::input_parse(string s, Player player = BLACK) {
     // player = BLACK;
+
+    istringstream ss(s);
+    vector<string> vec;
+    copy(istream_iterator<string>(ss), istream_iterator<string>(), back_inserter(vec));
+
     State newstate = state;
     auto delete_from_set = [](decltype(newstate.black_markers) &s, const decltype(newstate.black_markers)::value_type &e) {
         auto search = s.find(e);
         if (search != s.end())
             s.erase(search);
     };
-    if (s[0] == 'P') {
-        pair<int, int> p1 = hex_to_coord(make_pair(stoi(s.substr(2, 3)), stoi(s.substr(4, 5))));
+    if (vec[0] == "P") {
+        pair<int, int> p1 = hex_to_coord(make_pair(stoi(vec[1]), stoi(vec[2])));
         if (player == WHITE) {
             newstate.board_map[p1] = WHITE_RING;
             newstate.white_rings.insert(p1);
@@ -600,9 +619,9 @@ void Board::input_parse(string s, Player player = BLACK) {
             newstate.board_map[p1] = BLACK_RING;
             newstate.black_rings.insert(p1);
         }
-    } else if (s[0] == 'S') {
-        pair<int, int> p2 = hex_to_coord(make_pair(stoi(s.substr(2, 3)), stoi(s.substr(4, 5))));
-        pair<int, int> p3 = hex_to_coord(make_pair(stoi(s.substr(8, 9)), stoi(s.substr(10, 11))));
+    } else if (vec[0] == "S") {
+        pair<int, int> p2 = hex_to_coord(make_pair(stoi(vec[1]), stoi(vec[2])));
+        pair<int, int> p3 = hex_to_coord(make_pair(stoi(vec[4]), stoi(vec[5])));
         decltype(newstate.board_map)::mapped_type ring;
         decltype(newstate.board_map)::mapped_type marker;
         auto rings = std::ref(newstate.white_rings);
@@ -636,12 +655,12 @@ void Board::input_parse(string s, Player player = BLACK) {
         //toggle & change white&blackmarker, board_map
         newstate = Toggle(p2, p3, newstate);
 
-        if (s.length() > 11) {
-            int k = 13;
-            while (s[k] != '\0') {
-                pair<int, int> p4 = hex_to_coord(make_pair(stoi(s.substr(k + 2, k + 3)), stoi(s.substr(k + 4, k + 5))));
-                pair<int, int> p5 = hex_to_coord(make_pair(stoi(s.substr(k + 9, k + 10)), stoi(s.substr(k + 11, k + 12))));
-                pair<int, int> p6 = hex_to_coord(make_pair(stoi(s.substr(k + 15, k + 16)), stoi(s.substr(k + 17, k + 18))));
+        if (vec.size() > 6) {
+            size_t k = 6;
+            while (k < vec.size()) {
+                pair<int, int> p4 = hex_to_coord(make_pair(stoi(vec[k + 1]), stoi(vec[k + 2])));
+                pair<int, int> p5 = hex_to_coord(make_pair(stoi(vec[k + 4]), stoi(vec[k + 5])));
+                pair<int, int> p6 = hex_to_coord(make_pair(stoi(vec[k + 7]), stoi(vec[k + 8])));
                 if (p4.first == p5.first) {
                     if (p5.second > p4.second) {
                         for (int i = p4.second; i <= p5.second; i++) {
@@ -681,7 +700,7 @@ void Board::input_parse(string s, Player player = BLACK) {
                 }
                 newstate.board_map[p6] = EMPTY;
                 delete_from_set(rings, p6);
-                k = k + 20;
+                k = k + 9;
             }
         }
     }
@@ -989,7 +1008,7 @@ void Board::checkfor5() {
     //cout<<(*q).second.first<<" "<<(*q).second.second<<endl;
     //cout<<endl;
     //proper_plies = Generating_proper_moves_from_selection_moves(state, *q, player, proper_plies);
-    decltype(state.board_map)::mapped_type ring;
+    // decltype(state.board_map)::mapped_type ring;
     decltype(state.board_map)::mapped_type marker;
     auto rings = std::ref(newstate.white_rings);
     auto otherrings = std::ref(newstate.black_rings);
@@ -998,14 +1017,14 @@ void Board::checkfor5() {
 
     if (player == WHITE) {
         marker = WHITE_MARKER;
-        ring = WHITE_RING;
+        // ring = WHITE_RING;
         markers = std::ref(newstate.white_markers);
         othermarkers = std::ref(newstate.black_markers);
         rings = std::ref(newstate.white_rings);
         otherrings = std::ref(newstate.black_rings);
     } else {
         marker = BLACK_MARKER;
-        ring = BLACK_RING;
+        // ring = BLACK_RING;
         markers = std::ref(newstate.black_markers);
         othermarkers = std::ref(newstate.white_markers);
         rings = std::ref(newstate.black_rings);
@@ -1198,15 +1217,15 @@ bool Board::is_game_over() const {
 string Board::output_parse(Proper_Ply &proper_ply_tooutput) {
     string s;
 
-    if(get<0>(proper_ply_tooutput)!=make_pair(10,10))
+    if (get<0>(proper_ply_tooutput) != make_pair(10, 10))
         get<0>(proper_ply_tooutput) = coord_to_hex(get<0>(proper_ply_tooutput));
-    if(get<1>(proper_ply_tooutput)!=make_pair(10,10))
+    if (get<1>(proper_ply_tooutput) != make_pair(10, 10))
         get<1>(proper_ply_tooutput) = coord_to_hex(get<1>(proper_ply_tooutput));
-    if(get<2>(proper_ply_tooutput)!=make_pair(10,10))
+    if (get<2>(proper_ply_tooutput) != make_pair(10, 10))
         get<2>(proper_ply_tooutput) = coord_to_hex(get<2>(proper_ply_tooutput));
-    if(get<3>(proper_ply_tooutput)!=make_pair(10,10))
+    if (get<3>(proper_ply_tooutput) != make_pair(10, 10))
         get<3>(proper_ply_tooutput) = coord_to_hex(get<3>(proper_ply_tooutput));
-    if(get<4>(proper_ply_tooutput)!=make_pair(10,10))
+    if (get<4>(proper_ply_tooutput) != make_pair(10, 10))
         get<4>(proper_ply_tooutput) = coord_to_hex(get<4>(proper_ply_tooutput));
 
     if (get<1>(proper_ply_tooutput) == make_pair(10, 10)) {
