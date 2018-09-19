@@ -224,7 +224,7 @@ long heuristic(State &state, const Player &player) {
     auto my_valh = value_heuristic(state, player);
     auto my_markerh = marker_heuristic(state, player);
     // auto my_ringh = 1 * ring_moves_heuristic(state, player) + ring_fuse_heuristic(state, player, 1, 1);
-    auto my_ringh = ring_connected_heuristic(state, player);
+    auto my_ringh = ring_fuse_heuristic(state, player, 1, 1);
 
     Player other_player;
     if (player == WHITE)
@@ -234,7 +234,7 @@ long heuristic(State &state, const Player &player) {
 
     auto other_valh = value_heuristic(state, other_player);
     auto other_markerh = marker_heuristic(state, other_player);
-    auto other_ringh = ring_connected_heuristic(state, other_player);
+    auto other_ringh = ring_fuse_heuristic(state, other_player, 1, 1);
     // auto other_ringh = 1 * ring_moves_heuristic(state, other_player) + ring_fuse_heuristic(state, other_player, 1, 1);
 
     auto valh = my_valh - other_valh;
